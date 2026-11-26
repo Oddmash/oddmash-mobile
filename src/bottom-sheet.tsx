@@ -52,12 +52,14 @@ export const BottomSheet = ({open, defaultOpen = false, onOpenChange, title, chi
   const index = points.indexOf(current);
   return <Overlay open={visible} onDismiss={() => setVisible(false)} dismissible={dismissible} title={title} returnFocusRef={returnFocusRef}
     className={centered ? 'om-centered' : 'om-sheet'} style={centered ? undefined : {height: size, minHeight: `min(12rem, ${viewportHeight})`, maxHeight: viewportHeight, bottom: viewport?.bottomInset, transition: drag.dragging ? 'none' : undefined}}>
-    {showHandle && <div key="handle" className="om-sheet-controls"><button ref={setHandle} type="button" className="om-handle" aria-label="Resize sheet"
+    {showHandle && <div key="handle" className="om-sheet-controls"><button ref={setHandle} type="button" className="om-handle" aria-label={points.length > 1 ? "Resize sheet" : "Dismiss sheet"}
       onClick={(event) => {
-        if (event.detail === 0 || !drag.didDrag()) setSelected(points[(index + 1) % points.length]!);
+        if (event.detail !== 0 && drag.didDrag()) return;
+        if (points.length === 1) setVisible(false);
+        else setSelected(points[(index + 1) % points.length]!);
       }}
       onKeyDown={(event) => {
-      if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+      if (points.length === 1 || !['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault();
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? points.length - 1 : clamp(index + (event.key === 'ArrowUp' ? 1 : -1), 0, points.length - 1);
       setSelected(points[next]!);

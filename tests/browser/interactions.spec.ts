@@ -284,3 +284,29 @@ test('a swipe starting on a form label does not open the actions', async ({ page
   await item.click();
   await expect(checkbox).toBeChecked();
 });
+
+test('a dismissible single-point sheet has a working dismiss handle', async ({ page }) => {
+  await page.goto('/tests/browser/fixtures/controls.html');
+  const trigger = page.getByRole('button', { name: 'Open single-point sheet' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Single-point sheet' });
+  const handle = sheet.getByRole('button', { name: 'Dismiss sheet' });
+  await expect(sheet.getByRole('button', { name: 'Resize sheet' })).toHaveCount(0);
+  await handle.click();
+  await expect(sheet).toBeHidden();
+  await trigger.click();
+  await handle.press('Enter');
+  await expect(sheet).toBeHidden();
+});
+
+test('each preview demo includes its usage inputs and runnable component example', async ({ page }) => {
+  await page.goto('/');
+  for (const component of ['AdaptiveDialog', 'SwipeAction', 'PullToRefresh']) {
+    const disclosure = page.getByText(`${component} example and options`, { exact: true });
+    await disclosure.click();
+    const example = disclosure.locator('..').locator('pre');
+    await expect(example).toBeVisible();
+    await expect(example).toContainText(`<${component}`);
+    await expect(example).toContainText('@oddmash/mobile-interactions/');
+  }
+});
