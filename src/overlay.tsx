@@ -45,8 +45,16 @@ export const Overlay = ({open, onDismiss, dismissible = true, showCloseButton = 
     const dialog = ref.current;
     if (!dialog || !open) return;
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    dialog.showModal();
-    initialFocusRef?.current?.focus({preventScroll: true});
+    const initialFocus = initialFocusRef?.current;
+    const setAutofocus = initialFocus && !initialFocus.hasAttribute('autofocus');
+    // The browser chooses its initial focus inside showModal, before a subsequent focus call.
+    if (setAutofocus) initialFocus.setAttribute('autofocus', '');
+    try {
+      dialog.showModal();
+    } finally {
+      if (setAutofocus) initialFocus.removeAttribute('autofocus');
+    }
+    initialFocus?.focus({preventScroll: true});
     const unlock = lockScroll();
     return () => {
       if (dialog.open) dialog.close();

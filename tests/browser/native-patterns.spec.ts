@@ -8,9 +8,18 @@ test('action sheet opens on Cancel, restores focus and only commits explicit cho
   const cancel = sheet.getByRole('button', { name: 'Cancel', exact: true });
   const duplicate = sheet.getByRole('button', { name: 'Duplicate report' });
 
+  await page.evaluate(() => {
+    document.addEventListener('focusin', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || !target.closest('.om-action-sheet')) return;
+      const previous = document.body.dataset.sheetFocus ?? '';
+      document.body.dataset.sheetFocus = `${previous}|${target.textContent?.trim()}`;
+    });
+  });
   await trigger.click();
   await expect(sheet).toHaveAccessibleDescription('Choose an action for the weekly report.');
   await expect(cancel).toBeFocused();
+  await expect(page.locator('body')).toHaveAttribute('data-sheet-focus', '|Cancel');
   await expect(sheet.getByRole('button', { name: 'Share report' })).toBeDisabled();
   await page.keyboard.press('Escape');
   await expect(sheet).toBeHidden();
