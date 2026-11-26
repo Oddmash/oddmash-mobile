@@ -117,3 +117,72 @@ test('touch swipes reveal actions and touch pulls refresh content', async ({ pag
   await drag('.om-refresh-handle', 0, 75);
   await expect(page.getByText('Revision 1')).toBeVisible();
 });
+
+test('sheet handle cycles through snap points with a pointer click', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open filters' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Filters' });
+  const handle = sheet.getByRole('button', { name: 'Resize sheet' });
+  const before = (await sheet.boundingBox())!.height;
+  await handle.click();
+  await expect.poll(async () => (await sheet.boundingBox())!.height).toBeGreaterThan(before);
+  await handle.click();
+  await expect.poll(async () => (await sheet.boundingBox())!.height).toBeCloseTo(before);
+});
+
+test('small sheet snap points keep a nondismissible completion button reachable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/tests/browser/fixtures/controls.html');
+  const trigger = page.getByRole('button', { name: 'Open compact sheet' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Compact sheet' });
+  const finish = sheet.getByRole('button', { name: 'Finish' });
+  await finish.click();
+  await expect(sheet).toBeHidden();
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  await expect(finish).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(sheet).toBeHidden();
+});
+
+test('right-swipe trigger remains in the viewport with keyboard focus', async ({ page }) => {
+  await page.setViewportSize({ width: 240, height: 800 });
+  await page.goto('/tests/browser/fixtures/controls.html');
+  const trigger = page.getByRole('button', { name: 'Show actions' });
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  const hide = page.getByRole('button', { name: 'Hide actions' });
+  await expect(hide).toBeFocused();
+  await expect(hide).toBeInViewport({ ratio: 1 });
+  await hide.click();
+  await trigger.click();
+  await expect(hide).toBeInViewport({ ratio: 1 });
+});
+
+test('a sheet drag can restart after its handle disappears in dialog mode', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Edit profile' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Edit profile' });
+  const handle = dialog.getByRole('button', { name: 'Resize sheet' });
+  const beginDrag = async () => {
+    const bounds = (await handle.boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y - 65, { steps: 5 });
+    await expect(dialog).toHaveCSS('transition-property', 'none');
+  };
+  await expect(handle).toBeVisible();
+  await beginDrag();
+  await page.setViewportSize({ width: 900, height: 800 });
+  await expect(handle).toHaveCount(0);
+  await page.mouse.up();
+  await page.setViewportSize({ width: 390, height: 800 });
+  await expect(handle).toBeVisible();
+  await expect(dialog).toHaveCSS('transition-property', 'height');
+  await beginDrag();
+  await page.mouse.up();
+});

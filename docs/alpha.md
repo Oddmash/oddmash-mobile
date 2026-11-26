@@ -9,7 +9,7 @@ import '@oddmash/mobile/styles.css';
 export const Filters = () => <BottomSheet defaultOpen title="Filters" snapPoints={[0.5, 0.9]}>Choose a filter</BottomSheet>;
 ```
 
-Use controlled `open` and `onOpenChange` for an external trigger. Pass its button ref through `returnFocusRef` to restore focus when clicking the trigger does not focus it, as can happen in Safari. Snap points are fractions of the visual viewport; the resize handle supports arrows, Home, End and dragging. Use `dismissible={false}` only with an explicit completion or cancel action inside the content.
+Use controlled `open` and `onOpenChange` for an external trigger. Pass its button ref through `returnFocusRef` to restore focus when clicking the trigger does not focus it, as can happen in Safari. Snap points are fractions of the visual viewport; tap the resize handle to cycle through snap points. The handle also supports arrows, Home, End and dragging. Small snap points have a minimum rendered height so the controls and scrollable content stay reachable. Use `dismissible={false}` only with an explicit completion or cancel action inside the content.
 
 | Export | Main inputs |
 | --- | --- |

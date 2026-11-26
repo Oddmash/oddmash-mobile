@@ -31,9 +31,12 @@ export const SwipeAction = ({children, actions, open, defaultOpen = false, onOpe
     setVisible(false);
     triggerRef.current?.focus();
   }}}>
-    <div ref={actionsRef} id={id} className="om-swipe-actions" aria-hidden={!visible} style={{width: actionWidth, [direction === 'left' ? 'right' : 'left']: 0}}>{actions}</div>
-    <div className="om-swipe-content" style={{transform: `translateX(${offset}px)`, transition: drag.dragging ? 'none' : undefined}} {...drag.handlers}>
-      {children}<button ref={triggerRef} type="button" aria-expanded={visible} aria-controls={id} onClick={() => setVisible(!visible)}>{visible ? 'Hide actions' : label}</button>
+    <div className="om-swipe-track">
+      <div ref={actionsRef} id={id} className="om-swipe-actions" aria-hidden={!visible} style={{width: actionWidth, [direction === 'left' ? 'right' : 'left']: 0}}>{actions}</div>
+      <div className="om-swipe-content" style={{transform: `translateX(clamp(-100%, ${offset}px, 100%))`, transition: drag.dragging ? 'none' : undefined}} {...drag.handlers}>
+        {children}
+      </div>
     </div>
+    <button ref={triggerRef} type="button" aria-expanded={visible} aria-controls={id} onClick={() => setVisible(!visible)}>{visible ? 'Hide actions' : label}</button>
   </div>;
 };
