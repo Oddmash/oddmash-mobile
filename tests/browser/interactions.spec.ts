@@ -265,3 +265,22 @@ test('swipe surface is opaque over closed actions', async ({ page }) => {
   await expect(content).toHaveCSS('background-color', color);
   await expect(row.getByRole('button', { name: 'Archive' })).toHaveCount(0);
 });
+
+test('a swipe starting on a form label does not open the actions', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/tests/browser/fixtures/controls.html');
+  const item = page.getByText('Right-swipe item');
+  const bounds = (await item.boundingBox())!;
+  const row = page.locator('.om-swipe-track');
+  const rowBounds = (await row.boundingBox())!;
+  const y = bounds.y + bounds.height / 2;
+  await page.mouse.move(bounds.x + 32, y);
+  await page.mouse.down();
+  await page.mouse.move(rowBounds.x + rowBounds.width - 8, y, { steps: 5 });
+  await page.mouse.up();
+  await expect(page.getByRole('button', { name: 'Show actions' })).toHaveAttribute('aria-expanded', 'false');
+  const checkbox = page.getByRole('checkbox', { name: 'Right-swipe item' });
+  await expect(checkbox).not.toBeChecked();
+  await item.click();
+  await expect(checkbox).toBeChecked();
+});

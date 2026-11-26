@@ -14,8 +14,9 @@
 .om-handle span{width:36px;height:4px;border-radius:4px;background:currentColor;opacity:.45}
 .om-overlay button,.om-swipe button,.om-refresh button{min-height:44px;min-width:44px;font:inherit;cursor:pointer}
 .om-overlay button:focus-visible,.om-swipe button:focus-visible,.om-refresh button:focus-visible{outline:2px solid var(--om-focus,#2563eb);outline-offset:2px}
-.om-swipe{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;background:var(--om-surface,#fff);color:var(--om-text,#18181b)}
-.om-swipe-track{position:relative;overflow:hidden;display:grid;background:inherit}
+.om-swipe{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"track trigger";align-items:stretch;background:var(--om-surface,#fff);color:var(--om-text,#18181b)}
+.om-swipe > button{grid-area:trigger}
+.om-swipe-track{grid-area:track;position:relative;overflow:hidden;display:grid;background:inherit}
 .om-swipe-actions{position:absolute;max-width:100%;inset-block:0;display:flex;align-items:center;justify-content:center}
 .om-swipe-content{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:inherit;touch-action:pan-y;transition:transform 180ms ease-out}
 .om-refresh-handle{touch-action:none;padding:8px;text-align:center}

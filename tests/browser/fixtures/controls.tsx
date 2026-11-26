@@ -24,7 +24,7 @@ const Controls = () => {
       <form method="dialog"><button type="submit" value="finished">Complete tall dialog</button></form>
     </BottomSheet>
     <SwipeAction direction="right" actions={<button type="button">Archive item</button>}>
-      <span>Right-swipe item</span>
+      <label><input type="checkbox" /> Right-swipe item</label>
     </SwipeAction>
   </>;
 };
