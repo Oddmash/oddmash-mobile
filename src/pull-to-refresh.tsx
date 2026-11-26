@@ -18,10 +18,16 @@ export const PullToRefresh = ({children, onRefresh, disabled = false, threshold 
     finally {busy.current = false;}
   };
   const drag = useDrag({axis: 'y', canStart: () => !disabled && !busy.current, onCommit: (distance) => {if (distance >= threshold) void refresh();}});
+  const status = state === 'refreshing' ? 'Refreshing…'
+    : drag.distance >= threshold ? 'Release to refresh'
+    : state === 'error' ? 'Refresh failed. Try again.'
+    : state === 'success' ? 'Refreshed'
+    : '';
+
   return <section className="om-refresh" aria-busy={state === 'refreshing'}>
     <div className="om-refresh-handle" {...drag.handlers} aria-hidden="true">Pull down to refresh ↓</div>
     <button type="button" disabled={disabled || state === 'refreshing'} onClick={() => void refresh()}>{label}</button>
-    <div className="om-refresh-status" role="status">{state === 'refreshing' ? 'Refreshing…' : state === 'error' ? 'Refresh failed. Try again.' : state === 'success' ? 'Refreshed' : drag.distance >= threshold ? 'Release to refresh' : ''}</div>
+    <div className="om-refresh-status" role="status">{status}</div>
     {children}
   </section>;
 };

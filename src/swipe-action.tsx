@@ -12,13 +12,25 @@ export const SwipeAction = ({children, actions, open, defaultOpen = false, onOpe
   const id = useId();
   const actionsRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => { if (actionsRef.current) actionsRef.current.inert = !visible; }, [visible]);
+  useEffect(() => {
+    const panel = actionsRef.current;
+    if (!panel) return;
+    if (!visible && panel.contains(document.activeElement)) {
+      triggerRef.current?.focus();
+    }
+    panel.inert = !visible;
+  }, [visible]);
   const sign = direction === 'left' ? -1 : 1;
-  const drag = useDrag({axis: 'x', canStart: (event) => !(event.target instanceof Element && event.target.closest('button,a,input,select,textarea')), onCommit: (distance) => {
+  const drag = useDrag({axis: 'x', canStart: (event) => !(event.target instanceof Element && event.target.closest('button,a,input,select,textarea,[contenteditable]:not([contenteditable="false"]),[role="button"],[role="link"]')), onCommit: (distance) => {
     if (Math.abs(distance) >= 32) setVisible(distance * sign > 0);
   }});
   const offset = clamp((visible ? actionWidth : 0) + drag.distance * sign, 0, actionWidth) * sign;
-  return <div className="om-swipe" onKeyDown={(event) => {if (event.key === 'Escape') {setVisible(false);triggerRef.current?.focus();}}}>
+  return <div className="om-swipe" onKeyDown={(event) => {if (event.key === 'Escape' && visible) {
+    event.preventDefault();
+    event.stopPropagation();
+    setVisible(false);
+    triggerRef.current?.focus();
+  }}}>
     <div ref={actionsRef} id={id} className="om-swipe-actions" aria-hidden={!visible} style={{width: actionWidth, [direction === 'left' ? 'right' : 'left']: 0}}>{actions}</div>
     <div className="om-swipe-content" style={{transform: `translateX(${offset}px)`, transition: drag.dragging ? 'none' : undefined}} {...drag.handlers}>
       {children}<button ref={triggerRef} type="button" aria-expanded={visible} aria-controls={id} onClick={() => setVisible(!visible)}>{visible ? 'Hide actions' : label}</button>

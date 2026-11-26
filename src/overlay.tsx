@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useId, useRef } from 'react';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, ReactNode, RefObject } from 'react';
 
 let locks = 0;
 let previousOverflow = '';
@@ -9,11 +9,13 @@ const lockScroll = () => {
   return () => { if (--locks === 0) document.body.style.overflow = previousOverflow; };
 };
 
-export type OverlayProps = { open: boolean; onDismiss: () => void; dismissible?: boolean; title: string; children: ReactNode; className?: string; style?: CSSProperties };
+export type OverlayProps = { open: boolean; onDismiss: () => void; dismissible?: boolean; title: string; children: ReactNode; className?: string; style?: CSSProperties; returnFocusRef?: RefObject<HTMLElement | null> };
 
-export const Overlay = ({open, onDismiss, dismissible = true, title, children, className, style}: OverlayProps) => {
+export const Overlay = ({open, onDismiss, dismissible = true, title, children, className, style, returnFocusRef}: OverlayProps) => {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const focusTarget = useRef(returnFocusRef);
+  useEffect(() => { focusTarget.current = returnFocusRef; }, [returnFocusRef]);
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || !open) return;
@@ -23,7 +25,9 @@ export const Overlay = ({open, onDismiss, dismissible = true, title, children, c
     return () => {
       if (dialog.open) dialog.close();
       unlock();
-      if (trigger?.isConnected) trigger.focus({preventScroll: true});
+      const explicitTrigger = focusTarget.current?.current;
+      const target = explicitTrigger?.isConnected ? explicitTrigger : trigger;
+      if (target?.isConnected) target.focus({preventScroll: true});
     };
   }, [open]);
   return <dialog ref={ref} className={`om-overlay ${className ?? ''}`} style={style} aria-labelledby={titleId}
