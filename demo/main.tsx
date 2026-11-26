@@ -104,6 +104,14 @@ const navigationItems = [
   { id: 'projects', href: '#navigation-projects', label: 'Projects' },
   { id: 'account', href: '#navigation-account', label: 'Account' },
 ];
+const componentIndex = [
+  ['bottom-sheet', 'Bottom Sheet', 'Resizable overlays'],
+  ['adaptive-dialog', 'Adaptive Dialog', 'Responsive forms'],
+  ['swipe-action', 'Swipe Action', 'List-row controls'],
+  ['pull-to-refresh', 'Pull to Refresh', 'Async list reload'],
+  ['action-sheet', 'Action Sheet', 'Contextual choices'],
+  ['bottom-navigation', 'Bottom Navigation', 'App destinations'],
+];
 
 const App = () => {
   const sheetTrigger = useRef<HTMLButtonElement>(null);
@@ -140,6 +148,7 @@ const App = () => {
         <nav aria-label="Main navigation">
           <a href="#quickstart">Quickstart</a>
           <a href="#components">Components</a>
+          <a href="./guide/">Docs</a>
           <PlatformLink platform="github" href={repository} aria-label="Oddmash Mobile on GitHub" />
         </nav>
       </div>
@@ -149,7 +158,7 @@ const App = () => {
       <section className="hero" aria-labelledby="page-title">
         <div className="hero-copy">
           <h1 id="page-title">Mobile interactions for React.</h1>
-          <p className="hero-description">Add sheets, adaptive dialogs, swipe actions, and pull to refresh to an existing React app.</p>
+          <p className="hero-description">Six primitives for gestures, overlays, and navigation in your existing React app.</p>
           <div className="hero-actions">
             <ButtonLink href="#quickstart">Get started</ButtonLink>
             <a href="#components">Explore components <span aria-hidden="true">↓</span></a>
@@ -182,15 +191,23 @@ const App = () => {
             <div className="inbox-row"><strong>Design review</strong><span>Alex Chen</span></div>
             <div className="inbox-row"><strong>Release notes</strong><span>Jamie Park</span></div>
           </div>
-          <a className="stage-link" href="#swipe-action">Use Swipe Action in your app <span aria-hidden="true">↘</span></a>
+          <a className="stage-link" href="./guide/swipe-action/">Use Swipe Action in your app <span aria-hidden="true">↗</span></a>
         </section>
       </section>
+
+      <nav className="component-index" aria-label="Try a component">
+        <ul>
+          {componentIndex.map(([id, name, description]) => (
+            <li key={id}><a href={`#${id}`}><strong>{name}</strong><span>{description}</span></a></li>
+          ))}
+        </ul>
+      </nav>
 
       <section id="quickstart" className="major-section quickstart" aria-labelledby="quickstart-title">
         <div className="section-intro">
           <h2 id="quickstart-title">Quickstart</h2>
           <p>Build the alpha tarball from the source and add it to your React project.</p>
-          <a href="./docs/alpha-verification.md">Compatibility and verification</a>
+          <a href="./guide/quickstart/">Read the full setup guide</a>
         </div>
         <div className="quickstart-steps">
           <section aria-labelledby="installation">
@@ -222,10 +239,10 @@ const App = () => {
         <div className="section-intro">
           <h2 id="components-title">Components</h2>
           <p>Try each interaction, then check the options for using it in your app.</p>
-          <a href="./docs/native-interaction-parity.md">Native behavior and browser support</a>
+          <a href="./guide/native-parity/">Native behavior and browser support</a>
         </div>
         <div className="component-list">
-          <section className="component-row" aria-labelledby="bottom-sheet-title">
+          <section id="bottom-sheet" className="component-row" aria-labelledby="bottom-sheet-title">
             <div><h3 id="bottom-sheet-title">Bottom Sheet</h3><p>Let users adjust product filters and return to the catalog. Tap, drag, or use the arrow keys on the sheet handle.</p></div>
             <div className="component-example">
               <Button ref={sheetTrigger} onClick={() => setSheet(true)}>Open filters</Button>
@@ -234,10 +251,10 @@ const App = () => {
                 <p>Choose filters without leaving the page.</p>
                 <Button onClick={() => setSheet(false)}>Apply filters</Button>
               </BottomSheet>
-              <a href="#first-example">Bottom Sheet example and options</a>
+              <a href="./guide/bottom-sheet/">Bottom Sheet reference</a>
             </div>
           </section>
-          <section className="component-row" aria-labelledby="adaptive-title">
+          <section id="adaptive-dialog" className="component-row" aria-labelledby="adaptive-title">
             <div><h3 id="adaptive-title">Adaptive Dialog</h3><p>Edit a profile in a sheet on a narrow screen or in a centered dialog on a wide screen.</p></div>
             <div className="component-example">
               <Button ref={dialogTrigger} onClick={() => setDialog(true)}>Edit profile</Button>
@@ -246,6 +263,7 @@ const App = () => {
                 <Button onClick={() => setDialog(false)}>Done</Button>
               </AdaptiveDialog>
               <details><summary>AdaptiveDialog example and options</summary><p>Pass a title and control visibility with open and onOpenChange. The default presentation adapts at breakpoint.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Adaptive Dialog example code"><code>{adaptiveExample}</code></pre></details>
+              <a href="./guide/adaptive-dialog/">Adaptive Dialog reference</a>
             </div>
           </section>
           <section id="swipe-action" className="component-row" aria-labelledby="swipe-title">
@@ -253,9 +271,10 @@ const App = () => {
             <div className="component-example">
               <ButtonLink href="#inbox-preview" variant="secondary">Try the inbox example</ButtonLink>
               <details><summary>SwipeAction example and options</summary><p>Pass the row through children and its controls through actions. Set direction to choose the reveal edge.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Swipe Action example code"><code>{swipeExample}</code></pre></details>
+              <a href="./guide/swipe-action/">Swipe Action reference</a>
             </div>
           </section>
-          <section className="component-row" aria-labelledby="refresh-title">
+          <section id="pull-to-refresh" className="component-row" aria-labelledby="refresh-title">
             <div><h3 id="refresh-title">Pull to Refresh</h3><p>Reload a list with a pull or a button, with feedback while the request runs.</p></div>
             <div className="component-example">
               <PullToRefresh onRefresh={async () => {
@@ -263,9 +282,10 @@ const App = () => {
                 setRevision((value) => value + 1);
               }}><p>Revision {revision}</p></PullToRefresh>
               <details><summary>PullToRefresh example and options</summary><p>Return a promise from onRefresh so busy and failure states reflect your request. Threshold sets the pull distance in pixels.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Pull to Refresh example code"><code>{refreshExample}</code></pre></details>
+              <a href="./guide/pull-to-refresh/">Pull to Refresh reference</a>
             </div>
           </section>
-          <section className="component-row" aria-labelledby="action-sheet-title">
+          <section id="action-sheet" className="component-row" aria-labelledby="action-sheet-title">
             <div><h3 id="action-sheet-title">Action Sheet</h3><p>Offer a short list of related choices and an explicit way to cancel.</p></div>
             <div className="component-example">
               <Button ref={actionTrigger} onClick={() => setActionsOpen(true)}>Open report actions</Button>
@@ -279,10 +299,10 @@ const App = () => {
                 returnFocusRef={actionTrigger}
               />
               <output>{selectedAction}</output>
-              <a href="./docs/components/action-sheet.md">Action Sheet usage and options</a>
+              <a href="./guide/action-sheet/">Action Sheet reference</a>
             </div>
           </section>
-          <section className="component-row" aria-labelledby="bottom-navigation-title">
+          <section id="bottom-navigation" className="component-row" aria-labelledby="bottom-navigation-title">
             <div><h3 id="bottom-navigation-title">Bottom Navigation</h3><p>Use real links for top-level destinations and mark the current page.</p></div>
             <div className="component-example navigation-example">
               <div className="navigation-example-screen">
@@ -290,16 +310,21 @@ const App = () => {
                 <p>{navigationItems.find(({id}) => id === activeDestination)?.label}</p>
               </div>
               <BottomNavigation label="Example app destinations" items={navigationItems} activeId={activeDestination} />
-              <a href="./docs/components/bottom-navigation.md">Bottom Navigation usage and options</a>
+              <a href="./guide/bottom-navigation/">Bottom Navigation reference</a>
             </div>
           </section>
         </div>
+      </section>
+      <section className="support-band" aria-labelledby="support-title">
+        <div><h2 id="support-title">Check before you ship</h2><p>See the verified browser coverage and the remaining device checks for this source alpha.</p></div>
+        <a href="./guide/support/">Support and limitations</a>
+        <a href="./guide/composition/">Composition recipes</a>
       </section>
     </main>
 
     <footer className="shell footer">
       <span>Oddmash Mobile</span>
-      <a href="./docs/alpha.md">API and limitations</a>
+      <a href="./guide/">Documentation</a>
     </footer>
   </>;
 };

@@ -6,7 +6,7 @@ Mobile interactions for React web apps.
 
 **Status:** Experimental source. Registry availability and physical-device support are not yet verified.
 
-Try the [interactive alpha documentation](https://oddmash.github.io/oddmash-mobile/). Explore the [planning documents](docs/README.md), [alpha usage and limitations](docs/alpha.md), and [roadmap](docs/roadmap.md).
+Try the [interactive demos](https://oddmash.github.io/oddmash-mobile/) and read the [public guide](https://oddmash.github.io/oddmash-mobile/guide/). Explore the [planning documents](docs/README.md), [alpha usage and limitations](docs/alpha.md), and [roadmap](docs/roadmap.md).
 
 ## 한국어
 기존 웹 프로젝트를 유지하면서 모바일 앱 인터랙션을 구현하는 React 라이브러리입니다. 현재 알파 후보이며 npm 배포와 실기기 검증은 완료되지 않았습니다.
