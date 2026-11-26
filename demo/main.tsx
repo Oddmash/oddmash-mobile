@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Button, ButtonLink } from '@oddmash/ui/button';
 import { ClipboardButton } from '@oddmash/ui/clipboard-button';
 import { Input } from '@oddmash/ui/input';
+import { PlatformLink } from '@oddmash/ui/platform-link';
 import '@oddmash/ui/styles.css';
 import { AdaptiveDialog, BottomSheet, PullToRefresh, SwipeAction } from '../src/index.js';
 import '../src/styles.css';
@@ -13,14 +14,13 @@ for (const [name, value] of Object.entries(theme)) {
   document.documentElement.style.setProperty(`--mobile-${name}`, value);
 }
 
-const filterExample = `import { useEffect, useRef, useState } from 'react';
+const filterExample = `import { useRef, useState } from 'react';
 import { BottomSheet } from '@oddmash/mobile-interactions/bottom-sheet';
 import '@oddmash/mobile-interactions/styles.css';
 
 export function FilterExample() {
   const trigger = useRef(null);
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <button ref={trigger} onClick={() => setOpen(true)}>
@@ -117,7 +117,7 @@ const App = () => {
         <nav aria-label="Main navigation">
           <a href="#quickstart">Quickstart</a>
           <a href="#components">Components</a>
-          <a href={repository}>GitHub</a>
+          <PlatformLink platform="github" href={repository} aria-label="Oddmash Mobile on GitHub" />
         </nav>
       </div>
     </header>
@@ -172,10 +172,12 @@ const App = () => {
         <div className="quickstart-steps">
           <section aria-labelledby="installation">
             <h3 id="installation">Build and install</h3>
+            <p>Use Node.js 24 and pnpm 11.25.0 to build from source.</p>
             <div className="code-panel">
               <div className="code-toolbar"><span>Package checkout</span><ClipboardButton text={buildCommands} labels={copyLabels} size="sm" variant="ghost" aria-label="Copy build commands" /></div>
               <pre><code>{buildCommands}</code></pre>
             </div>
+            <p>Replace the path below with the tarball path printed by <code>pnpm pack</code>.</p>
             <div className="code-panel">
               <div className="code-toolbar"><span>Your React app</span><ClipboardButton text={installCommand} labels={copyLabels} size="sm" variant="ghost" aria-label="Copy install command" /></div>
               <pre><code>{installCommand}</code></pre>
@@ -186,7 +188,7 @@ const App = () => {
             <p>Save this example as <code>FilterExample.jsx</code>, then render <code>&lt;FilterExample /&gt;</code> in your app.</p>
             <div className="code-panel">
               <div className="code-toolbar"><span>FilterExample.jsx</span><ClipboardButton text={filterExample} labels={copyLabels} size="sm" variant="ghost" aria-label="Copy Bottom Sheet example" /></div>
-              <pre><code>{filterExample}</code></pre>
+              <pre className="example-code" tabIndex={0} role="region" aria-label="Bottom Sheet example code"><code>{filterExample}</code></pre>
             </div>
             <p>Use <code>onOpenChange</code> to keep visibility in sync and <code>returnFocusRef</code> to restore focus. In Next.js App Router, add <code>'use client'</code> to the example. Import the stylesheet to apply the sheet layout.</p>
           </section>
@@ -219,14 +221,14 @@ const App = () => {
                 <label>Name <Input defaultValue="Alex" /></label>
                 <Button onClick={() => setDialog(false)}>Done</Button>
               </AdaptiveDialog>
-              <details><summary>AdaptiveDialog example and options</summary><p>Pass a title and control visibility with open and onOpenChange. The default presentation adapts at breakpoint.</p><pre><code>{adaptiveExample}</code></pre></details>
+              <details><summary>AdaptiveDialog example and options</summary><p>Pass a title and control visibility with open and onOpenChange. The default presentation adapts at breakpoint.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Adaptive Dialog example code"><code>{adaptiveExample}</code></pre></details>
             </div>
           </section>
           <section id="swipe-action" className="component-row" aria-labelledby="swipe-title">
             <div><h3 id="swipe-title">Swipe Action</h3><p>Reveal message actions within the row. Use the disclosure button to reach the same actions by keyboard.</p></div>
             <div className="component-example">
               <ButtonLink href="#inbox-preview" variant="secondary">Try the inbox example</ButtonLink>
-              <details><summary>SwipeAction example and options</summary><p>Pass the row through children and its controls through actions. Set direction to choose the reveal edge.</p><pre><code>{swipeExample}</code></pre></details>
+              <details><summary>SwipeAction example and options</summary><p>Pass the row through children and its controls through actions. Set direction to choose the reveal edge.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Swipe Action example code"><code>{swipeExample}</code></pre></details>
             </div>
           </section>
           <section className="component-row" aria-labelledby="refresh-title">
@@ -236,7 +238,7 @@ const App = () => {
                 await new Promise<void>((resolve) => setTimeout(resolve, 300));
                 setRevision((value) => value + 1);
               }}><p>Revision {revision}</p></PullToRefresh>
-              <details><summary>PullToRefresh example and options</summary><p>Return a promise from onRefresh so busy and failure states reflect your request. Threshold sets the pull distance in pixels.</p><pre><code>{refreshExample}</code></pre></details>
+              <details><summary>PullToRefresh example and options</summary><p>Return a promise from onRefresh so busy and failure states reflect your request. Threshold sets the pull distance in pixels.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Pull to Refresh example code"><code>{refreshExample}</code></pre></details>
             </div>
           </section>
         </div>
@@ -246,7 +248,6 @@ const App = () => {
     <footer className="shell footer">
       <span>Oddmash Mobile</span>
       <a href="./docs/alpha.md">API and limitations</a>
-      <a href={repository}>Source and feedback</a>
     </footer>
   </>;
 };

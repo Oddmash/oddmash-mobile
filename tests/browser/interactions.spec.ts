@@ -328,3 +328,29 @@ test('the Mobile landing opens its live example and in-site quickstart on a narr
   await expect(page).toHaveURL(/#quickstart$/);
   await expect(page.getByRole('button', { name: 'Copy build commands' })).toBeInViewport();
 });
+
+test('the narrow landing keeps the repository icon and zoomed swipe actions usable', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/');
+  const nav = page.getByRole('navigation', { name: 'Main navigation' });
+  const github = nav.getByRole('link', { name: 'Oddmash Mobile on GitHub' });
+  const sourceUrl = 'https://github.com/Oddmash/oddmash-mobile';
+  await expect(github).toHaveAttribute('href', sourceUrl);
+  await github.focus();
+  await expect(github).toBeFocused();
+  const bounds = (await github.boundingBox())!;
+  expect(bounds.width).toBeGreaterThanOrEqual(44);
+  expect(bounds.height).toBeGreaterThanOrEqual(44);
+  await page.route(sourceUrl, (route) => route.fulfill({ body: 'Repository destination' }));
+  await github.press('Enter');
+  await expect(page).toHaveURL(sourceUrl);
+  await page.goto('/');
+
+  const preview = page.getByRole('region', { name: 'Inbox' });
+  const reveal = preview.getByRole('button', { name: 'Show actions' });
+  await expect(reveal).toBeInViewport({ ratio: 1 });
+  await page.addStyleTag({ content: 'html { font-size: 200%; }' });
+  await reveal.click();
+  await preview.getByRole('button', { name: 'Archive', exact: true }).click();
+  await expect(preview.getByRole('button', { name: 'Restore message' })).toBeFocused();
+});
