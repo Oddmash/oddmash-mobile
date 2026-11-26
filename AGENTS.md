@@ -9,3 +9,7 @@ Follow the [organization agreements](https://github.com/Oddmash/.github/blob/mai
 - Keep APIs experimental until release evidence exists. Update docs, demos, tests and exported types together. Record physical device results separately from browser emulation.
 - Run pnpm verify, pnpm test:browser and pnpm pack before review. Do not claim browser or accessibility conformance without evidence. The trusted aggregate CI job is verify.
 - Publish only from approved main with the release gate in docs/quality-and-release.md; never embed npm credentials. Record support limitations, version and artifact evidence.
+
+## GitHub account use
+
+Follow the [Oddmash GitHub account policy](https://github.com/Oddmash/.github/blob/main/docs/github-account-policy.md). Use `arvynoo` for AI-authored commits, issues and PRs with command-scoped authentication and a separate checkout or worktree per session. Only `qtaghdi` gives final approval to and manually merges external contributions.
