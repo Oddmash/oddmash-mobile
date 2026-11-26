@@ -46,7 +46,16 @@ test('swipe preview survives an unrelated cancellation and cancels without openi
   await page.mouse.up();
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
   await expect(content).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+});
 
+test('swipe opens actions and Escape restores focus', async ({ page }) => {
+  await page.goto('/');
+  const content = page.locator('.om-swipe-content');
+  const trigger = page.getByRole('button', { name: 'Show actions' });
+  await content.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  const bounds = (await content.boundingBox())!;
+  const x = bounds.x + bounds.width / 2;
+  const y = bounds.y + bounds.height / 2;
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.move(x - 55, y);
@@ -89,7 +98,7 @@ test('touch swipes reveal actions and touch pulls refresh content', async ({ pag
   await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true });
   await page.goto('/');
 
-  const drag = async (selector: string, dx: number, dy: number) => {
+  const drag = async (selector: string, dx: number, dy: number, end: 'touchEnd' | 'touchCancel' = 'touchEnd') => {
     const handle = page.locator(selector);
     await handle.evaluate((element) => element.scrollIntoView({ block: 'center' }));
     const bounds = (await handle.boundingBox())!;
@@ -97,9 +106,12 @@ test('touch swipes reveal actions and touch pulls refresh content', async ({ pag
     const y = Math.round(bounds.y + bounds.height / 2);
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + dx, y: y + dy }] });
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await cdp.send('Input.dispatchTouchEvent', { type: end, touchPoints: [] });
   };
 
+  await drag('.om-swipe-content', -56, 0, 'touchCancel');
+  await expect(page.getByRole('button', { name: 'Show actions' })).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('.om-swipe-content')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
   await drag('.om-swipe-content', -56, 0);
   await expect(page.getByRole('button', { name: 'Archive' })).toBeVisible();
   await drag('.om-refresh-handle', 0, 75);
