@@ -2,6 +2,8 @@
 
 The source alpha exposes six components. APIs may change during alpha. Install from a locally packed tarball until a registry release is verified.
 
+Start with the [Quickstart](quickstart.md) for installation or [composition recipes](composition.md) for integration into an existing app.
+
 ```tsx
 import { BottomSheet } from '@oddmash/mobile-interactions/bottom-sheet';
 import '@oddmash/mobile-interactions/styles.css';
@@ -13,10 +15,10 @@ Use controlled `open` and `onOpenChange` for an external trigger. Pass its butto
 
 | Export | Main inputs |
 | --- | --- |
-| BottomSheet | open, defaultOpen, onOpenChange, title, snapPoints, snapPoint, onSnapPointChange, dismissible, returnFocusRef |
-| AdaptiveDialog | BottomSheet inputs plus breakpoint and presentation |
-| SwipeAction | children, actions, open, onOpenChange, direction, actionWidth, label |
-| PullToRefresh | children, onRefresh, disabled, threshold, label |
+| [BottomSheet](components/bottom-sheet.md) | open, defaultOpen, onOpenChange, title, snapPoints, snapPoint, onSnapPointChange, dismissible, returnFocusRef |
+| [AdaptiveDialog](components/adaptive-dialog.md) | BottomSheet inputs plus breakpoint and presentation |
+| [SwipeAction](components/swipe-action.md) | children, actions, open, onOpenChange, direction, actionWidth, label |
+| [PullToRefresh](components/pull-to-refresh.md) | children, onRefresh, disabled, threshold, label |
 | [ActionSheet](components/action-sheet.md) | title, actions, onSelect, open, onOpenChange, cancelLabel |
 | [BottomNavigation](components/bottom-navigation.md) | label, items, activeId, className |
 
