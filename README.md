@@ -1,12 +1,12 @@
 # Oddmash Mobile
 
-Native-like interactions for the web.
+Mobile interactions for React web apps.
 
-Build touch-friendly React web apps without replacing your router or design system. The alpha candidate includes Bottom Sheet, Adaptive Dialog, Swipe Action and Pull to Refresh with optional scoped CSS.
+`@oddmash/mobile-interactions` helps you build touch-friendly React web apps without replacing your router or design system. The alpha candidate includes Bottom Sheet, Adaptive Dialog, Swipe Action and Pull to Refresh with optional scoped CSS. For example, add a product filter sheet that keeps shoppers on the catalog page while they adjust their options.
 
 **Status:** Experimental source. Registry availability and physical-device support are not yet verified.
 
-Explore the [planning documents](docs/README.md), [alpha usage and limitations](docs/alpha.md), and [roadmap](docs/roadmap.md).
+Try the [interactive alpha documentation](https://oddmash.github.io/oddmash-mobile/). Explore the [planning documents](docs/README.md), [alpha usage and limitations](docs/alpha.md), and [roadmap](docs/roadmap.md).
 
 ## 한국어
 기존 웹 프로젝트를 유지하면서 모바일 앱 인터랙션을 구현하는 React 라이브러리입니다. 현재 알파 후보이며 npm 배포와 실기기 검증은 완료되지 않았습니다.

@@ -9,6 +9,10 @@ React and Next.js developers building mobile-first web apps, PWAs or hybrid web 
 ## Positioning
 Native-like interactions for the web. Behavior-first, styleable, independently imported primitives. Default styles are neutral; no claim of OS parity or affiliation with Apple, Google or Samsung.
 
+## Version 1 goal
+
+Make the four mobile interactions dependable in existing React and Next.js apps, with independently importable components, scoped styling, and shared rules for gesture ownership, keyboard interaction and focus. Use filtering and inbox workflows as the reference experiences. Verify them in current iOS Safari and Android Chrome, with VoiceOver and TalkBack, and in at least one consumer app. Use the measured bundle and interaction comparisons to decide whether another primitive would improve the package.
+
 ## Alternatives
 | Alternative | Strength | Evaluation question |
 | --- | --- | --- |

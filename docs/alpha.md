@@ -3,8 +3,8 @@
 The proposed 0.1.0-alpha.0 package exposes four components. API may change during alpha. Install from a locally packed tarball until a registry release is verified.
 
 ```tsx
-import { BottomSheet } from '@oddmash/mobile/bottom-sheet';
-import '@oddmash/mobile/styles.css';
+import { BottomSheet } from '@oddmash/mobile-interactions/bottom-sheet';
+import '@oddmash/mobile-interactions/styles.css';
 
 export const Filters = () => <BottomSheet defaultOpen title="Filters" snapPoints={[0.5, 0.9]}>Choose a filter</BottomSheet>;
 ```
@@ -24,6 +24,6 @@ Style with `--om-surface`, `--om-text` and `--om-focus`. No global stylesheet re
 
 ## Verification scope
 
-The alpha candidate includes type checks, gesture tests, and Playwright scenarios for Chromium, Firefox and WebKit. The packed package was installed in clean React 18.3.1 and 19.3.1 projects and checked for subpath imports, server rendering and CSS resolution. The Chromium touch scenario uses emulated input. Next.js hydration, physical iOS and Android devices, assistive technology and comparative performance still require verification.
+The alpha candidate includes type checks, gesture tests, and Playwright scenarios for Chromium, Firefox and WebKit. The packed package was installed in clean React 18.3.1 and 19.3.1 projects and checked for subpath imports, server rendering and CSS resolution. The Chromium touch scenario uses emulated input. A Next.js App Router consumer has exercised the documented first-use example. Physical iOS and Android devices, VoiceOver and TalkBack, and comparative performance still require verification. See the [alpha verification notes](alpha-verification.md) for the checks and limitations.
 
 Run `pnpm install --frozen-lockfile`, `pnpm verify`, `pnpm test:browser`, `pnpm pack`, and `pnpm dev` for the demo. Use Node 24 and the declared pnpm version.

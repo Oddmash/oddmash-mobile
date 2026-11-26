@@ -2,7 +2,7 @@
 
 | ID | Status | Decision and rationale |
 | --- | --- | --- |
-| ADR-001 | Accepted direction | Independent repository and @oddmash/mobile package, compatible with but not dependent on Oddmash UI. |
+| ADR-001 | Accepted direction | Independent repository and @oddmash/mobile-interactions package, compatible with but not dependent on Oddmash UI. |
 | ADR-002 | Proposed | React-first, no router or CSS framework required. Revisit adapters only on demand. |
 | ADR-003 | Proposed | Behavior-first optional neutral styles, no copied OS assets or claims of equivalence. |
 | ADR-004 | Open | Choose overlay semantics and gesture dependency after comparing native dialog and maintained primitives with the same fixture. |

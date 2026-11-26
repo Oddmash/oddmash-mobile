@@ -1,5 +1,5 @@
 {
-  "name": "@oddmash/mobile",
+  "name": "@oddmash/mobile-interactions",
   "version": "0.1.0-alpha.0",
   "description": "Mobile interaction primitives for React web applications.",
   "type": "module",
@@ -23,7 +23,7 @@
     "test": "vitest run",
     "test:browser": "playwright test",
     "dev": "vite --host 127.0.0.1",
-    "build:docs": "vite build --base ./ --outDir docs-dist",
+    "build:docs": "vite build --base ./ --outDir docs-dist && node scripts/build-docs-content.mjs",
     "verify": "pnpm typecheck && pnpm test && pnpm build && pnpm build:docs"
   },
   "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" },
