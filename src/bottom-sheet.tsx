@@ -1,4 +1,5 @@
 'use client';
+import { useCallback, useEffect, useRef } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { Overlay } from './overlay.js';
 import { useControlled } from './use-controlled.js';
@@ -24,11 +25,34 @@ export const BottomSheet = ({open, defaultOpen = false, onOpenChange, title, chi
     setSelected(nearestSnapPoint(points, projected));
   }});
   const size = height ? `${clamp(current * height - drag.distance, 0, height)}px` : `${current * 100}dvh`;
+  const handleRef = useRef<HTMLButtonElement | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const restoreHandleFocus = useRef(false);
+  const setHandle = useCallback((node: HTMLButtonElement | null) => {
+    if (!node && handleRef.current === document.activeElement) restoreHandleFocus.current = true;
+    handleRef.current = node;
+  }, []);
+  useEffect(() => {
+    if (!restoreHandleFocus.current) return;
+    restoreHandleFocus.current = false;
+    const content = contentRef.current;
+    const dialog = content?.closest('dialog');
+    if (visible && !showHandle && content && dialog?.open && !dialog.contains(document.activeElement)) {
+      const control = content.querySelector<HTMLElement>(
+        'input:not([disabled]):not([type="hidden"]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]',
+      );
+      if (control) control.focus({ preventScroll: true });
+      if (!dialog.contains(document.activeElement)) {
+        content.tabIndex = -1;
+        content.focus({ preventScroll: true });
+      }
+    }
+  }, [visible, showHandle]);
   const viewportHeight = height ? `${height}px` : '100dvh';
   const index = points.indexOf(current);
   return <Overlay open={visible} onDismiss={() => setVisible(false)} dismissible={dismissible} title={title} returnFocusRef={returnFocusRef}
     className={centered ? 'om-centered' : 'om-sheet'} style={centered ? undefined : {height: size, minHeight: `min(12rem, ${viewportHeight})`, maxHeight: viewportHeight, bottom: viewport?.bottomInset, transition: drag.dragging ? 'none' : undefined}}>
-    {showHandle && <div key="handle" className="om-sheet-controls"><button type="button" className="om-handle" aria-label="Resize sheet"
+    {showHandle && <div key="handle" className="om-sheet-controls"><button ref={setHandle} type="button" className="om-handle" aria-label="Resize sheet"
       onClick={(event) => {
         if (event.detail === 0 || !drag.didDrag()) setSelected(points[(index + 1) % points.length]!);
       }}
@@ -38,6 +62,6 @@ export const BottomSheet = ({open, defaultOpen = false, onOpenChange, title, chi
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? points.length - 1 : clamp(index + (event.key === 'ArrowUp' ? 1 : -1), 0, points.length - 1);
       setSelected(points[next]!);
     }} {...drag.handlers}><span /></button></div>}
-    <div key="content" className="om-overlay-content">{children}</div>
+    <div key="content" ref={contentRef} className="om-overlay-content">{children}</div>
   </Overlay>;
 };

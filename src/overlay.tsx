@@ -9,10 +9,16 @@ const lockScroll = () => {
   return () => { if (--locks === 0) document.body.style.overflow = previousOverflow; };
 };
 
+const outsideDialog = (dialog: HTMLDialogElement, x: number, y: number) => {
+  const { left, right, top, bottom } = dialog.getBoundingClientRect();
+  return x < left || x > right || y < top || y > bottom;
+};
+
 export type OverlayProps = { open: boolean; onDismiss: () => void; dismissible?: boolean; title: string; children: ReactNode; className?: string; style?: CSSProperties; returnFocusRef?: RefObject<HTMLElement | null> };
 
 export const Overlay = ({open, onDismiss, dismissible = true, title, children, className, style, returnFocusRef}: OverlayProps) => {
   const ref = useRef<HTMLDialogElement>(null);
+  const backdropPress = useRef<number | null>(null);
   const titleId = useId();
   const focusTarget = useRef(returnFocusRef);
   useEffect(() => { focusTarget.current = returnFocusRef; }, [returnFocusRef]);
@@ -54,7 +60,26 @@ export const Overlay = ({open, onDismiss, dismissible = true, title, children, c
       dialog.showModal();
       onDismiss();
     }}
-    onClick={(event) => { if (dismissible && event.target === event.currentTarget) onDismiss(); }}>
+    onPointerDown={(event) => {
+      const { currentTarget, target, button, pointerId, clientX, clientY, isPrimary } = event;
+      backdropPress.current = isPrimary && button === 0 && target === currentTarget
+        && outsideDialog(currentTarget, clientX, clientY) ? pointerId : null;
+    }}
+    onPointerCancel={(event) => {
+      if (backdropPress.current === event.pointerId) backdropPress.current = null;
+    }}
+    onPointerUp={(event) => {
+      if (backdropPress.current !== event.pointerId || event.target !== event.currentTarget
+        || !outsideDialog(event.currentTarget, event.clientX, event.clientY)) {
+        backdropPress.current = null;
+      }
+    }}
+    onClick={(event) => {
+      const startedOnBackdrop = backdropPress.current !== null;
+      backdropPress.current = null;
+      if (dismissible && startedOnBackdrop && event.target === event.currentTarget
+        && outsideDialog(event.currentTarget, event.clientX, event.clientY)) onDismiss();
+    }}>
     {open && <div className="om-overlay-inner"><header className="om-overlay-header"><h2 id={titleId}>{title}</h2>{dismissible && <button type="button" onClick={onDismiss} aria-label="Close dialog">×</button>}</header>{children}</div>}
   </dialog>;
 };

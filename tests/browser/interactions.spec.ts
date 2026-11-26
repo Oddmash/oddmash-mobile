@@ -223,3 +223,45 @@ test('centered dialog scrolls to a native form and respects controlled closure',
   await expect(dialog).toBeHidden();
   await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
+
+test('a modal dismisses only when the pointer press and release both hit the backdrop', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 600 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Edit profile' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Edit profile' });
+  const field = dialog.getByRole('textbox', { name: 'Name' });
+  const bounds = (await field.boundingBox())!;
+  await page.mouse.move(bounds.x + 8, bounds.y + 8);
+  await page.mouse.down();
+  await page.mouse.move(20, 20);
+  await page.mouse.up();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(20, 20);
+  await expect(dialog).toBeHidden();
+});
+
+test('adaptive dialogs keep focus inside the modal when a focused resize handle is removed', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Edit profile' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Edit profile' });
+  const handle = dialog.getByRole('button', { name: 'Resize sheet' });
+  await handle.focus();
+  await page.setViewportSize({ width: 900, height: 800 });
+  await expect(handle).toHaveCount(0);
+  await expect(dialog.getByRole('textbox', { name: 'Name' })).toBeFocused();
+});
+
+test('swipe surface is opaque over closed actions', async ({ page }) => {
+  await page.goto('/');
+  const row = page.locator('.om-swipe');
+  const color = await row.evaluate((element) => getComputedStyle(element).backgroundColor);
+  const content = row.locator('.om-swipe-content');
+  await expect(content).toHaveCSS('background-color', color);
+  await expect(row.getByRole('button', { name: 'Archive' })).toHaveCount(0);
+  await row.getByRole('button', { name: 'Show actions' }).click();
+  await expect(row.getByRole('button', { name: 'Archive' })).toBeVisible();
+  await row.getByRole('button', { name: 'Hide actions' }).click();
+  await expect(content).toHaveCSS('background-color', color);
+  await expect(row.getByRole('button', { name: 'Archive' })).toHaveCount(0);
+});
