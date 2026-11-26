@@ -24,7 +24,7 @@ test('swipe preview survives an unrelated cancellation and cancels without openi
   await page.goto('/');
   const content = page.locator('.om-swipe-content');
   const trigger = page.getByRole('button', { name: 'Show actions' });
-  await trigger.scrollIntoViewIfNeeded();
+  await content.evaluate((element) => element.scrollIntoView({ block: 'center' }));
   const bounds = (await content.boundingBox())!;
   const x = bounds.x + bounds.width / 2;
   const y = bounds.y + bounds.height / 2;
@@ -50,6 +50,7 @@ test('swipe preview survives an unrelated cancellation and cancels without openi
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.move(x - 55, y);
+  await expect(content).toHaveCSS('transform', 'matrix(1, 0, 0, 1, -55, 0)');
   await page.mouse.up();
   const archive = page.getByRole('button', { name: 'Archive' });
   await expect(archive).toBeVisible();

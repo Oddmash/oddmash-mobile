@@ -24,6 +24,6 @@ Style with `--om-surface`, `--om-text` and `--om-focus`. No global stylesheet re
 
 ## Verification scope
 
-Local candidate: TypeScript, pure gesture tests, server-side rendering, package and demo builds. Browser automation requires a permitted local server or CI. React 18, Next.js hydration, actual iOS/Android devices, assistive technology and comparative performance remain unverified. No claim of production readiness or WCAG conformance.
+The alpha candidate includes type checks, gesture tests, and Playwright scenarios for Chromium, Firefox and WebKit. The packed package was installed in clean React 18.3.1 and 19.3.1 projects and checked for subpath imports, server rendering and CSS resolution. The Chromium touch scenario uses emulated input. Next.js hydration, physical iOS and Android devices, assistive technology and comparative performance still require verification.
 
 Run `pnpm install --frozen-lockfile`, `pnpm verify`, `pnpm test:browser`, `pnpm pack`, and `pnpm dev` for the demo. Use Node 24 and the declared pnpm version.
