@@ -1,7 +1,8 @@
 # Oddmash Mobile
 
-Experimental mobile interaction primitives for React. Not yet production ready.
+`@oddmash/mobile-interactions` is an experimental React package for Bottom Sheet, Adaptive Dialog, Swipe Action and Pull to Refresh.
 
-- [Alpha usage and limitations](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/alpha.md)
-- [Architecture](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/architecture.md)
-- [Quality and release](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/quality-and-release.md)
+- [Alpha usage and limitations](https://github.com/Oddmash/oddmash-mobile/blob/main/docs/alpha.md)
+- [Architecture](https://github.com/Oddmash/oddmash-mobile/blob/main/docs/architecture.md)
+- [Quality and release](https://github.com/Oddmash/oddmash-mobile/blob/main/docs/quality-and-release.md)
+- [Alpha verification](https://github.com/Oddmash/oddmash-mobile/blob/main/docs/alpha-verification.md)

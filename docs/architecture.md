@@ -1,7 +1,7 @@
 # Architecture
 
 ## Proposed structure
-A single public package @oddmash/mobile in this independent repository. Keep framework-neutral logic internal until there is evidence of another adapter consumer.
+A single public package @oddmash/mobile-interactions in this independent repository. Keep framework-neutral logic internal until there is evidence of another adapter consumer.
 
 | Layer | Responsibility |
 | --- | --- |
