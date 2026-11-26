@@ -2,7 +2,7 @@
 
 Mobile interactions for React web apps.
 
-`@oddmash/mobile-interactions` helps you build touch-friendly React web apps without replacing your router or design system. The alpha candidate includes Bottom Sheet, Adaptive Dialog, Swipe Action and Pull to Refresh with optional scoped CSS. For example, add a product filter sheet that keeps shoppers on the catalog page while they adjust their options.
+`@oddmash/mobile-interactions` helps you build touch-friendly React web apps without replacing your router or design system. The alpha candidate includes Bottom Sheet, Adaptive Dialog, Swipe Action, Pull to Refresh, Action Sheet and Bottom Navigation with optional scoped CSS. For example, add a product filter sheet that keeps shoppers on the catalog page while they adjust their options.
 
 **Status:** Experimental source. Registry availability and physical-device support are not yet verified.
 

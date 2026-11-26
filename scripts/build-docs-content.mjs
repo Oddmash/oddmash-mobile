@@ -10,6 +10,9 @@ const entries = [
   ['Browser verification', 'browser-verification.md'],
   ['Architecture', 'architecture.md'],
   ['Quality and release', 'quality-and-release.md'],
+  ['Native interaction parity', 'native-interaction-parity.md'],
+  ['Action Sheet usage', 'components/action-sheet.md'],
+  ['Bottom Navigation usage', 'components/bottom-navigation.md'],
 ];
 
 await cp(source, siteDocs, { recursive: true });
@@ -17,7 +20,7 @@ await cp(source, siteDocs, { recursive: true });
 const index = [
   '# Oddmash Mobile',
   '',
-  '> Experimental React components for Bottom Sheet, Adaptive Dialog, Swipe Action and Pull to Refresh.',
+  '> Experimental React components for Bottom Sheet, Adaptive Dialog, Swipe Action, Pull to Refresh, Action Sheet and Bottom Navigation.',
   '',
   'Package: `@oddmash/mobile-interactions`',
   '',

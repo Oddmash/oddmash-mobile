@@ -11,6 +11,9 @@ Status: proposed, 2026-11-26. No implementation or performance claims yet.
 | [Adaptive Dialog](components/adaptive-dialog.md) | Responsive overlay |
 | [Swipe Action](components/swipe-action.md) | List item gestures |
 | [Pull to Refresh](components/pull-to-refresh.md) | Async refresh |
+| [Action Sheet](components/action-sheet.md) | Modal choices and cancellation |
+| [Bottom Navigation](components/bottom-navigation.md) | Top-level native links and current destination |
+| [Native interaction parity](native-interaction-parity.md) | Platform and open-source references, implemented behavior and validation gaps |
 | [Roadmap](roadmap.md) | Milestones and dependencies |
 | [Quality and release](quality-and-release.md) | Acceptance gates and evidence |
 | [Decisions](decisions.md) | Decision log and open questions |

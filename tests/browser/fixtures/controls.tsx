@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BottomSheet, SwipeAction } from '../../../src/index.js';
+import { BottomSheet, PullToRefresh, SwipeAction } from '../../../src/index.js';
 import '../../../src/styles.css';
 
 const Controls = () => {
@@ -9,6 +9,8 @@ const Controls = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [allowClose, setAllowClose] = useState(false);
   const [closeRequests, setCloseRequests] = useState(0);
+  const [refreshDisabled, setRefreshDisabled] = useState(false);
+  const resolveRefresh = useRef<(() => void) | null>(null);
   return <>
     <button type="button" onClick={() => setOpen(true)}>Open compact sheet</button>
     <BottomSheet title="Compact sheet" open={open} onOpenChange={setOpen} snapPoints={[0.05]} dismissible={false}>
@@ -31,6 +33,13 @@ const Controls = () => {
     <SwipeAction direction="right" actions={<button type="button">Archive item</button>}>
       <label><input type="checkbox" /> Right-swipe item</label>
     </SwipeAction>
+    <section aria-label="Refresh fixture">
+      <button type="button" onClick={() => setRefreshDisabled((value) => !value)}>{refreshDisabled ? 'Resume refresh' : 'Pause refresh'}</button>
+      <button type="button" onClick={() => resolveRefresh.current?.()}>Finish request</button>
+      <PullToRefresh disabled={refreshDisabled} onRefresh={() => new Promise((resolve) => { resolveRefresh.current = resolve; })}>
+        <p>Refreshable content</p>
+      </PullToRefresh>
+    </section>
   </>;
 };
 
