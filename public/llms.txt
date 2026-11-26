@@ -1,0 +1,7 @@
+# Oddmash Mobile
+
+Experimental mobile interaction primitives for React. Not yet production ready.
+
+- [Alpha usage and limitations](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/alpha.md)
+- [Architecture](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/architecture.md)
+- [Quality and release](https://github.com/Oddmash/oddmash-mobile/blob/develop/docs/quality-and-release.md)
