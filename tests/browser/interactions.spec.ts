@@ -17,7 +17,7 @@ test('adaptive presentation preserves edited value', async ({page}) => {
 test('action buttons and async refresh work without gestures', async ({page}) => {
   await page.goto('/'); await page.getByRole('button',{name:'Show actions'}).click(); await page.getByRole('button',{name:'Archive'}).click();
   await expect(page.getByRole('button',{name:'Restore message'})).toBeVisible(); await page.getByRole('button',{name:'Refresh',exact:true}).click();
-  await expect(page.getByText('Revision 1')).toBeVisible(); await expect(page.getByRole('status')).toHaveText('Refreshed');
+  await expect(page.getByText('Revision 1')).toBeVisible(); await expect(page.getByRole('region', { name: 'Pull to Refresh' }).getByRole('status')).toHaveText('Refreshed');
 });
 
 test('swipe preview survives an unrelated cancellation and cancels without opening', async ({ page }) => {
@@ -72,7 +72,7 @@ test('swipe opens actions and Escape restores focus', async ({ page }) => {
 test('pull handle announces and commits a refresh after an earlier success', async ({ page }) => {
   await page.goto('/');
   const refresh = page.getByRole('button', { name: 'Refresh', exact: true });
-  const status = page.getByRole('status');
+  const status = page.getByRole('region', { name: 'Pull to Refresh' }).getByRole('status');
   await refresh.click();
   await expect(status).toHaveText('Refreshed');
 
@@ -309,4 +309,22 @@ test('each preview demo includes its usage inputs and runnable component example
     await expect(example).toContainText(`<${component}`);
     await expect(example).toContainText('@oddmash/mobile-interactions/');
   }
+});
+
+test('the Mobile landing opens its live example and in-site quickstart on a narrow screen', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const preview = page.getByRole('region', { name: 'Inbox' });
+  const reveal = preview.getByRole('button', { name: 'Show actions' });
+  await expect(reveal).toBeInViewport();
+  await reveal.press('Enter');
+  await preview.getByRole('button', { name: 'Archive' }).press('Enter');
+  const restore = preview.getByRole('button', { name: 'Restore message' });
+  await expect(restore).toBeFocused();
+  await restore.press('Enter');
+  await expect(reveal).toBeFocused();
+
+  await page.getByRole('link', { name: 'Get started' }).click();
+  await expect(page).toHaveURL(/#quickstart$/);
+  await expect(page.getByRole('button', { name: 'Copy build commands' })).toBeInViewport();
 });
