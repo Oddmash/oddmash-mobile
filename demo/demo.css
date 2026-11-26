@@ -1,0 +1,11 @@
+:root{font-family:system-ui,sans-serif;color:#e8e8eb;background:#111113;color-scheme:dark;--om-text:#e8e8eb;--om-surface:#242427;--om-focus:#a5b4fc}
+*{box-sizing:border-box}body{margin:0}main{max-width:720px;margin:auto;padding:48px 22px 80px}header{padding-bottom:24px}small{letter-spacing:.15em;color:#a6a6ad}h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.1;letter-spacing:-.05em}p{line-height:1.6;color:#bdbdc6}section{border-top:1px solid #38383d;padding:24px 0}button,input{font:inherit;min-height:44px;border:1px solid #666670;border-radius:8px;padding:8px 12px}button{cursor:pointer}a{color:#a5b4fc}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#1d1d20;padding:12px;border-radius:8px;color:#d6d6df;font-size:.85rem}label{display:grid;gap:8px;margin-bottom:16px}button:focus-visible,input:focus-visible{outline:2px solid #a5b4fc;outline-offset:2px}
+
+main {
+  overflow-wrap: anywhere;
+}
+
+input {
+  min-width: 0;
+  max-width: 100%;
+}

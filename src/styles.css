@@ -1,0 +1,24 @@
+.om-overlay{border:0;padding:0;color:var(--om-text,#18181b);background:var(--om-surface,#fff);max-width:100%;overflow:hidden;border-radius:18px;box-shadow:0 20px 60px #0003}
+.om-overlay::backdrop{background:#0006}
+.om-overlay-inner{display:flex;flex-direction:column;height:100%;min-height:0}
+.om-overlay-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px}
+.om-overlay-header h2{font-size:1.15rem;margin:0;overflow-wrap:anywhere}
+.om-overlay-content{overflow:auto;overscroll-behavior:contain;padding:0 20px max(20px,env(safe-area-inset-bottom));min-height:0}
+.om-sheet{position:fixed;inset:auto 0 0;margin:0 auto;width:min(100%,640px);border-radius:20px 20px 0 0;transition:height 180ms ease-out}
+.om-sheet .om-overlay-inner{overflow:auto}
+.om-sheet .om-overlay-content{min-height:min(3rem,100%)}
+.om-centered{width:min(calc(100% - 32px),480px);max-height:85dvh;overflow:auto}
+.om-centered .om-overlay-content{overflow:visible}
+.om-sheet-controls{display:flex;justify-content:center;order:-1}
+.om-handle{min-width:64px;min-height:44px;display:grid;place-items:center;touch-action:none;background:transparent;border:0;cursor:ns-resize}
+.om-handle span{width:36px;height:4px;border-radius:4px;background:currentColor;opacity:.45}
+.om-overlay button,.om-swipe button,.om-refresh button{min-height:44px;min-width:44px;font:inherit;cursor:pointer}
+.om-overlay button:focus-visible,.om-swipe button:focus-visible,.om-refresh button:focus-visible{outline:2px solid var(--om-focus,#2563eb);outline-offset:2px}
+.om-swipe{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"track trigger";align-items:stretch;background:var(--om-surface,#fff);color:var(--om-text,#18181b)}
+.om-swipe > button{grid-area:trigger}
+.om-swipe-track{grid-area:track;position:relative;overflow:hidden;display:grid;background:inherit}
+.om-swipe-actions{position:absolute;max-width:100%;inset-block:0;display:flex;align-items:center;justify-content:center}
+.om-swipe-content{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:inherit;touch-action:pan-y;transition:transform 180ms ease-out}
+.om-refresh-handle{touch-action:none;padding:8px;text-align:center}
+.om-refresh-status{min-height:1.5em;text-align:center}
+@media(prefers-reduced-motion:reduce){.om-sheet,.om-swipe-content{transition:none!important}}
