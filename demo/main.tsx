@@ -5,7 +5,7 @@ import { ClipboardButton } from '@oddmash/ui/clipboard-button';
 import { Input } from '@oddmash/ui/input';
 import { PlatformLink } from '@oddmash/ui/platform-link';
 import '@oddmash/ui/styles.css';
-import { AdaptiveDialog, BottomSheet, PullToRefresh, SwipeAction } from '../src/index.js';
+import { ActionSheet, AdaptiveDialog, BottomNavigation, BottomSheet, PullToRefresh, SwipeAction } from '../src/index.js';
 import '../src/styles.css';
 import './demo.css';
 import theme from './design-tokens.json' with { type: 'json' };
@@ -94,12 +94,35 @@ const repository = 'https://github.com/Oddmash/oddmash-mobile';
 const buildCommands = 'git clone https://github.com/Oddmash/oddmash-mobile.git\ncd oddmash-mobile\npnpm install --frozen-lockfile\npnpm build\npnpm pack';
 const installCommand = 'pnpm add /path/to/oddmash-mobile-interactions-0.1.0-alpha.0.tgz';
 const copyLabels = { idle: 'Copy', pending: 'Copying…', copied: 'Copied', error: 'Copy failed' };
+const actionChoices = [
+  { id: 'remove', label: 'Remove saved copy', destructive: true },
+  { id: 'duplicate', label: 'Duplicate report' },
+  { id: 'share', label: 'Share report', disabled: true },
+];
+const navigationItems = [
+  { id: 'inbox', href: '#navigation-inbox', label: 'Inbox' },
+  { id: 'projects', href: '#navigation-projects', label: 'Projects' },
+  { id: 'account', href: '#navigation-account', label: 'Account' },
+];
 
 const App = () => {
   const sheetTrigger = useRef<HTMLButtonElement>(null);
   const dialogTrigger = useRef<HTMLButtonElement>(null);
   const [sheet, setSheet] = useState(false);
   const [dialog, setDialog] = useState(false);
+  const actionTrigger = useRef<HTMLButtonElement>(null);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const [selectedAction, setSelectedAction] = useState('');
+  const [activeDestination, setActiveDestination] = useState('inbox');
+  useEffect(() => {
+    const update = () => {
+      const match = navigationItems.find(({ href }) => href === window.location.hash);
+      setActiveDestination(match?.id ?? 'inbox');
+    };
+    update();
+    window.addEventListener('hashchange', update);
+    return () => window.removeEventListener('hashchange', update);
+  }, []);
   const [archived, setArchived] = useState(false);
   const inboxRow = useRef<HTMLDivElement>(null);
   const restoreInboxFocus = useRef(false);
@@ -199,6 +222,7 @@ const App = () => {
         <div className="section-intro">
           <h2 id="components-title">Components</h2>
           <p>Try each interaction, then check the options for using it in your app.</p>
+          <a href="./docs/native-interaction-parity.md">Native behavior and browser support</a>
         </div>
         <div className="component-list">
           <section className="component-row" aria-labelledby="bottom-sheet-title">
@@ -239,6 +263,34 @@ const App = () => {
                 setRevision((value) => value + 1);
               }}><p>Revision {revision}</p></PullToRefresh>
               <details><summary>PullToRefresh example and options</summary><p>Return a promise from onRefresh so busy and failure states reflect your request. Threshold sets the pull distance in pixels.</p><pre className="example-code" tabIndex={0} role="region" aria-label="Pull to Refresh example code"><code>{refreshExample}</code></pre></details>
+            </div>
+          </section>
+          <section className="component-row" aria-labelledby="action-sheet-title">
+            <div><h3 id="action-sheet-title">Action Sheet</h3><p>Offer a short list of related choices and an explicit way to cancel.</p></div>
+            <div className="component-example">
+              <Button ref={actionTrigger} onClick={() => setActionsOpen(true)}>Open report actions</Button>
+              <ActionSheet
+                title="Report actions"
+                description="Choose an action for the weekly report."
+                open={actionsOpen}
+                onOpenChange={setActionsOpen}
+                actions={actionChoices}
+                onSelect={(id) => setSelectedAction(id === 'remove' ? 'Saved copy removed' : 'Report duplicated')}
+                returnFocusRef={actionTrigger}
+              />
+              <output>{selectedAction}</output>
+              <a href="./docs/components/action-sheet.md">Action Sheet usage and options</a>
+            </div>
+          </section>
+          <section className="component-row" aria-labelledby="bottom-navigation-title">
+            <div><h3 id="bottom-navigation-title">Bottom Navigation</h3><p>Use real links for top-level destinations and mark the current page.</p></div>
+            <div className="component-example navigation-example">
+              <div className="navigation-example-screen">
+                <span id="navigation-inbox" /><span id="navigation-projects" /><span id="navigation-account" />
+                <p>{navigationItems.find(({id}) => id === activeDestination)?.label}</p>
+              </div>
+              <BottomNavigation label="Example app destinations" items={navigationItems} activeId={activeDestination} />
+              <a href="./docs/components/bottom-navigation.md">Bottom Navigation usage and options</a>
             </div>
           </section>
         </div>

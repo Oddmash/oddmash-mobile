@@ -4,11 +4,31 @@ import type { PointerEvent } from 'react';
 import { getIntent } from './gesture.js';
 import type { Axis } from './gesture.js';
 
-type Session = { id: number; x: number; y: number; started: number; active: boolean; target: Element };
+type Session = {
+  id: number;
+  touch: boolean;
+  x: number;
+  y: number;
+  lastDistance: number;
+  lastMovementAt: number;
+  velocity: number;
+  active: boolean;
+  target: Element;
+};
 type Options = { axis: Axis; enabled?: boolean; canStart?: (event: PointerEvent<HTMLElement>) => boolean; onCommit: (distance: number, velocity: number) => void };
 
 // Nested drag surfaces share the event, so the closest eligible surface owns it.
 const claimedPointerDowns = new WeakSet<Event>();
+const releaseWindow = 48;
+const idleAfter = 80;
+
+const recordMovement = (session: Session, distance: number, now: number) => {
+  if (distance === session.lastDistance) return;
+  const elapsed = Math.min(releaseWindow, Math.max(1, now - session.lastMovementAt));
+  session.velocity = Math.min(3, Math.max(-3, (distance - session.lastDistance) / elapsed));
+  session.lastDistance = distance;
+  session.lastMovementAt = now;
+};
 
 export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) => {
   const session = useRef<Session | null>(null);
@@ -35,13 +55,21 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
     didDrag: () => dragged.current,
     handlers: {
       onPointerDown: (event: PointerEvent<HTMLElement>) => {
+        if (event.pointerType === 'touch' && !event.isPrimary && session.current?.touch) {
+          dragged.current = true;
+          cancel(session.current);
+          return;
+        }
         if (!enabled || !event.isPrimary || event.button !== 0 || session.current || canStart?.(event) === false) return;
         if (claimedPointerDowns.has(event.nativeEvent)) return;
         claimedPointerDowns.add(event.nativeEvent);
         dragged.current = false;
         const target = event.target instanceof Element ? event.target : event.currentTarget;
         target.setPointerCapture(event.pointerId);
-        session.current = { id: event.pointerId, x: event.clientX, y: event.clientY, started: event.timeStamp, active: false, target };
+        session.current = {
+          id: event.pointerId, touch: event.pointerType === 'touch', x: event.clientX, y: event.clientY,
+          lastDistance: 0, lastMovementAt: event.timeStamp, velocity: 0, active: false, target,
+        };
       },
       onPointerMove: (event: PointerEvent<HTMLElement>) => {
         const current = session.current;
@@ -50,7 +78,10 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
         const cross = axis === 'x' ? event.clientY - current.y : event.clientX - current.x;
         if (!current.active) {
           const intent = getIntent(primary, cross);
-          if (intent === 'pending') return;
+          if (intent === 'pending') {
+            recordMovement(current, primary, event.timeStamp);
+            return;
+          }
           dragged.current = true;
           if (intent === 'cross') {
             cancel(current);
@@ -59,6 +90,7 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
           current.active = true;
           setDragging(true);
         }
+        recordMovement(current, primary, event.timeStamp);
         setDistance(primary);
       },
       onPointerUp: (event: PointerEvent<HTMLElement>) => {
@@ -66,7 +98,10 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
         if (!current || current.id !== event.pointerId) return;
         const movement = delta(event, current);
         reset();
-        if (enabled && current.active) onCommit(movement, movement / Math.max(1, event.timeStamp - current.started));
+        if (!enabled || !current.active) return;
+        recordMovement(current, movement, event.timeStamp);
+        const velocity = event.timeStamp - current.lastMovementAt <= idleAfter ? current.velocity : 0;
+        onCommit(movement, velocity);
       },
       onPointerCancel: (event: PointerEvent<HTMLElement>) => {
         const current = session.current;
