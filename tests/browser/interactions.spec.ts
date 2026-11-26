@@ -186,3 +186,40 @@ test('a sheet drag can restart after its handle disappears in dialog mode', asyn
   await beginDrag();
   await page.mouse.up();
 });
+
+test('a sideways pointer gesture on the sheet handle does not cycle the snap point', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open filters' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Filters' });
+  const handle = sheet.getByRole('button', { name: 'Resize sheet' });
+  const before = (await sheet.boundingBox())!.height;
+  const bounds = (await handle.boundingBox())!;
+  const x = bounds.x + bounds.width / 2;
+  const y = bounds.y + bounds.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 20, y);
+  await page.mouse.up();
+  await expect(sheet).toHaveCSS('height', `${before}px`);
+});
+
+test('centered dialog scrolls to a native form and respects controlled closure', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 600 });
+  await page.goto('/tests/browser/fixtures/controls.html');
+  await page.getByRole('button', { name: 'Open tall dialog' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Tall dialog' });
+  const submit = dialog.getByRole('button', { name: 'Complete tall dialog' });
+  await expect(submit).not.toBeInViewport();
+  await dialog.hover();
+  await page.mouse.wheel(0, 1000);
+  await expect(submit).toBeInViewport();
+  await submit.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('Close requests: 1')).toBeVisible();
+  await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+
+  await dialog.getByRole('checkbox', { name: 'Allow close' }).check();
+  await submit.click();
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+});

@@ -31,7 +31,29 @@ export const Overlay = ({open, onDismiss, dismissible = true, title, children, c
     };
   }, [open]);
   return <dialog ref={ref} className={`om-overlay ${className ?? ''}`} style={style} aria-labelledby={titleId}
-    onCancel={(event) => { event.preventDefault(); if (dismissible) onDismiss(); }}
+    onCancel={(event) => {
+      if (event.target !== event.currentTarget) return;
+      event.preventDefault();
+      if (dismissible) onDismiss();
+    }}
+    onSubmit={(event) => {
+      const form = event.target;
+      if (event.defaultPrevented || !(form instanceof HTMLFormElement) || form.closest('dialog') !== event.currentTarget) return;
+      const submitter = event.nativeEvent.submitter;
+      const button = submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter : null;
+      const method = button?.hasAttribute('formmethod') ? button.formMethod : form.method;
+      if (method !== 'dialog') return;
+      event.preventDefault();
+      if (button) event.currentTarget.returnValue = button.value;
+      onDismiss();
+    }}
+    onClose={(event) => {
+      const dialog = event.currentTarget;
+      if (event.target !== dialog || !open || dialog.open || !dialog.isConnected) return;
+      // The controlled state remains authoritative if the browser closes the node directly.
+      dialog.showModal();
+      onDismiss();
+    }}
     onClick={(event) => { if (dismissible && event.target === event.currentTarget) onDismiss(); }}>
     {open && <div className="om-overlay-inner"><header className="om-overlay-header"><h2 id={titleId}>{title}</h2>{dismissible && <button type="button" onClick={onDismiss} aria-label="Close dialog">×</button>}</header>{children}</div>}
   </dialog>;

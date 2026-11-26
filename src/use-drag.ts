@@ -50,13 +50,13 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
         const cross = axis === 'x' ? event.clientY - current.y : event.clientX - current.x;
         if (!current.active) {
           const intent = getIntent(primary, cross);
+          if (intent === 'pending') return;
+          dragged.current = true;
           if (intent === 'cross') {
             cancel(current);
             return;
           }
-          if (intent === 'pending') return;
           current.active = true;
-          dragged.current = true;
           setDragging(true);
         }
         setDistance(primary);
