@@ -9,3 +9,7 @@ Follow the [organization agreements](https://github.com/Oddmash/.github/blob/mai
 - Keep DOM access client-side; SSR imports must be safe. Avoid implicit global gesture cancellation.
 - Add regression tests for gesture cancellation, scrolling, viewport changes, keyboard access, focus and reduced motion. Real-device findings are separate from emulation.
 - No npm release until the release gate in docs/quality-and-release.md is satisfied.
+
+## GitHub account use
+
+Follow the [Oddmash GitHub account policy](https://github.com/Oddmash/.github/blob/main/docs/github-account-policy.md). Use `arvynoo` for AI-authored commits, issues and PRs with command-scoped authentication and a separate checkout or worktree per session. Only `qtaghdi` gives final approval to and manually merges external contributions.
