@@ -26,7 +26,7 @@ Each item has a unique `id`, `href` and visible `label`. Optional icons are deco
 | Prop | Type | Behavior |
 | --- | --- | --- |
 | `label` | Required string | Accessible name for the navigation landmark. |
-| `items` | Required readonly item array | Each item contains permanent `id`, `href` and visible `label`; `icon` is optional. |
+| `items` | Required readonly item array | Each item contains permanent `id`, `href` and visible `label`. The icon is optional. |
 | `activeId` | Optional string | Marks the matching link as current. Derive it from the app's location. |
 | `className` | Optional string | Adds a class to the navigation element. |
 
