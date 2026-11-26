@@ -20,8 +20,8 @@
 body { margin: 0; }
 a { color: var(--mobile-accent); text-underline-offset: .22em; }
 a:focus-visible, summary:focus-visible, button:focus-visible, input:focus-visible {
-  outline: 2px solid var(--mobile-focus);
-  outline-offset: 2px;
+  outline: var(--mobile-focus-width) solid var(--mobile-focus);
+  outline-offset: var(--mobile-focus-offset);
 }
 p { line-height: 1.6; }
 p, h1, h2, h3 { margin: 0; }

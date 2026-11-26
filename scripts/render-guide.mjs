@@ -71,7 +71,7 @@ export const renderGuide = async (slug) => {
   ]);
   const content = md.render(markdown, { path, prefix, headings: new Map() });
   const tokens = JSON.parse(tokensText);
-  const theme = ['canvas', 'paper', 'ink', 'muted', 'line', 'accent', 'focus', 'code']
+  const theme = ['canvas', 'paper', 'ink', 'muted', 'line', 'accent', 'focus', 'focus-width', 'focus-offset', 'code']
     .map((name) => `--guide-${name}:${tokens[name]}`).join(';');
   const links = groups.map(([label, items]) => `<div><h2>${label}</h2><ul>${items.map(([key, name]) =>
     `<li><a href="${guideHref(prefix, key)}"${key === slug ? ' aria-current="page"' : ''}>${name}</a></li>`,

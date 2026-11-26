@@ -2,7 +2,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; }
 a { color: var(--guide-accent); text-underline-offset: .2em; }
-a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--guide-focus); outline-offset: 2px; }
+a:focus-visible, [tabindex]:focus-visible { outline: var(--guide-focus-width) solid var(--guide-focus); outline-offset: var(--guide-focus-offset); }
 header { border-bottom: 1px solid var(--guide-line); background: var(--guide-paper); }
 .shell { width: min(74rem, calc(100% - clamp(1rem, 4vw, 3rem) * 2)); margin-inline: auto; }
 .top, .top nav { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
@@ -33,7 +33,7 @@ p code, td code, li code { background: var(--guide-code); padding: .08em .22em; 
 .code-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: .5em; padding-inline: .65rem; border-bottom: 1px solid var(--guide-line); font-size: .875em; }
 .code-toolbar button { min-height: 44px; border: 0; padding: .25em .5em; background: transparent; color: var(--guide-accent); font: inherit; cursor: pointer; }
 .code-toolbar button:hover { text-decoration: underline; }
-.code-toolbar button:focus-visible { outline: 2px solid var(--guide-focus); outline-offset: -2px; }
+.code-toolbar button:focus-visible { outline: var(--guide-focus-width) solid var(--guide-focus); outline-offset: calc(-1 * var(--guide-focus-offset)); }
 .scroll-code pre { padding: 1rem; margin: 0; min-width: max-content; tab-size: 2; }
 table { border-collapse: collapse; width: 100%; min-width: 29rem; background: var(--guide-paper); }
 th, td { padding: .55rem .75rem; text-align: start; vertical-align: top; }
