@@ -1,11 +1,11 @@
 # Oddmash Mobile working agreements
 
-Follow the [organization agreements](https://github.com/Oddmash/.github/blob/main/AGENTS.md) and relevant [Oddmash skills](https://github.com/Oddmash/oddmash-skills).
+Follow the [organization agreements](https://github.com/Oddmash/.github/blob/main/AGENTS.md), especially concurrent work claims, contributor protections and normal merge commits. Consult the [Oddmash skills catalog](https://github.com/Oddmash/oddmash-skills) for product, architecture, accessibility and QA guidance.
 
-- Product integration branch: develop. Production release branch: main.
-- Planning contracts live under docs/. Proposed APIs are not public promises until released.
-- Start authorized work after repository, issue, claim and permission checks. Do not end an implementation turn with only an intention to work.
-- Use TypeScript, React 18/19, pnpm and independent module exports. Do not require a router or CSS framework.
-- Keep DOM access client-side; SSR imports must be safe. Avoid implicit global gesture cancellation.
-- Add regression tests for gesture cancellation, scrolling, viewport changes, keyboard access, focus and reduced motion. Real-device findings are separate from emulation.
-- No npm release until the release gate in docs/quality-and-release.md is satisfied.
+- Integrate through develop; main is reserved for approved releases. Create issue-linked topic branches, claim work only when no overlapping session or contributor owns it, and verify exact-head CI and independent review before merge.
+- Start authorized work in the same turn after preflight. Do not replace implementation with a promise or repeatedly ask for unchanged authorization.
+- Use TypeScript, React 18/19, pnpm 11.25.0, Node 24 and independent ESM module exports. No mandatory router, CSS framework, global reset or telemetry.
+- Keep DOM access inside client lifecycle. Public component modules and root entry preserve use client. Validate controlled state, pointer cancellation, modal focus, scrolling and viewport changes; keep gesture alternatives operable by keyboard.
+- Keep APIs experimental until release evidence exists. Update docs, demos, tests and exported types together. Record physical device results separately from browser emulation.
+- Run pnpm verify, pnpm test:browser and pnpm pack before review. Do not claim browser or accessibility conformance without evidence. The trusted aggregate CI job is verify.
+- Publish only from approved main with the release gate in docs/quality-and-release.md; never embed npm credentials. Record support limitations, version and artifact evidence.
