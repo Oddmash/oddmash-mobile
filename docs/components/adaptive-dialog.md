@@ -1,7 +1,26 @@
-# Adaptive Dialog (P0)
+# Adaptive Dialog
 
-Use a bottom sheet on narrow viewports and a conventional dialog on wider layouts. The caller owns content and open state; mode selection is configurable and deterministic on hydration.
+Use one form or modal task that appears as a sheet on a narrow viewport and a centered dialog on wider screens. The same content stays mounted when presentation changes, so draft values survive resizing.
 
-Proposed props: open, onOpenChange, defaultOpen, breakpoint or explicit presentation override. Reuse overlay semantics and tokens. Preserve form drafts and focus when presentation changes; never mount two active modal focus traps. On unsupported or unmeasured viewport, fall back to an accessible dialog.
+```tsx
+import { AdaptiveDialog } from '@oddmash/mobile-interactions/adaptive-dialog';
+import '@oddmash/mobile-interactions/styles.css';
 
-Acceptance: mode changes while open preserve content state, keyboard dismissal policy and accessible name; no SSR mismatch, focus loss or scroll leak. Verify resize, zoom, touch and desktop keyboard.
+<AdaptiveDialog title="Edit profile" open={open} onOpenChange={setOpen} breakpoint={720}>
+  <label>Name <input defaultValue="Alex" /></label>
+  <button type="button" onClick={() => setOpen(false)}>Done</button>
+</AdaptiveDialog>
+```
+
+## Props
+
+All [Bottom Sheet props](bottom-sheet.md#props) are accepted, with these presentation controls.
+
+| Prop | Type and default | Behavior |
+| --- | --- | --- |
+| `presentation` | `'auto' \| 'sheet' \| 'dialog'`, `'auto'` | Choose by breakpoint or force one presentation. |
+| `breakpoint` | Number, `640` | In auto mode, the sheet appears below this width in CSS pixels. |
+
+## Focus and resizing
+
+The server render starts with the centered presentation. The viewport mode is determined after mounting. A wide dialog uses the visual viewport for its height, and the component adjusts internal scroll when a focused field falls outside the dialog on viewport movement. Pass `returnFocusRef` when you need explicit focus restoration. Test the form on a real mobile keyboard if its layout is critical.

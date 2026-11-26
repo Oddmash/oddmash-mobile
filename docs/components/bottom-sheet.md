@@ -1,21 +1,32 @@
-# Bottom Sheet (P0)
+# Bottom Sheet
 
-## Scenario
-Open filters on a mobile web app, adjust a field while the software keyboard is visible, scroll results and dismiss without losing page position.
+Use a resizable modal panel for a task such as filtering a list or editing a short form. For a complete runnable integration, see the [Quickstart](../quickstart.md).
 
-## Proposed API
-Compound components: Root, Trigger, Portal, Backdrop, Content, Handle, Title, Description, Close. Root accepts controlled open/onOpenChange or defaultOpen; snapPoints and controlled snapPoint/onSnapPointChange; dismissible; modal. Snap points use explicit units or content sizing, validated and sorted. Exact type syntax and default remain an ADR.
+```tsx
+import { BottomSheet } from '@oddmash/mobile-interactions/bottom-sheet';
+import '@oddmash/mobile-interactions/styles.css';
 
-## Interaction
-- Open at requested/default snap point; drag handle to adjacent or projected valid point.
-- Keep scrollable content scrolling until boundary and eligible gesture direction. MVP may restrict dragging to handle if nested handoff is unreliable.
-- Cancel short or interrupted drags; respect dismissible=false.
-- On keyboard open, keep focused field visible; clamp heights to usable viewport.
-- Dismiss via explicit close and Escape where permitted; return focus; preserve scroll.
+<BottomSheet title="Filters" open={open} onOpenChange={setOpen} snapPoints={[0.4, 0.85]}>
+  <button type="button" onClick={() => setOpen(false)}>Apply</button>
+</BottomSheet>
+```
 
-## Acceptance
-- Controlled consumer can reject a close without visual state drift.
-- No background scroll leak; nested overlays restore lock correctly.
-- 320px viewport, long content, orientation and safe area work.
-- Pointer cancellation, rapid reopen, snap resizing and reduced motion are tested.
-- VoiceOver/TalkBack and physical iOS/Android keyboards tested before stable release.
+## Props
+
+| Prop | Type and default | Behavior |
+| --- | --- | --- |
+| `title`, `children` | Required string and React node | Label the dialog and render its contents. |
+| `open`, `onOpenChange` | Optional boolean and callback | Control visibility. Apply the requested value or keep the current state. |
+| `defaultOpen` | Boolean, `false` | Initial visibility in uncontrolled mode. |
+| `snapPoints` | Readonly number array, `[0.5, 0.9]` | Fractions of the usable visual viewport from above zero to one. Values must be finite. The component sorts and removes duplicates. |
+| `snapPoint`, `onSnapPointChange` | Optional number and callback | Control the active detent. An unmatched value displays at the nearest available detent. |
+| `defaultSnapPoint` | Number, first normalized detent | Initial detent in uncontrolled mode. |
+| `dismissible` | Boolean, `true` | Allow close button, Escape, backdrop and eligible downward handle dismissal. |
+| `presentation` | `'sheet' \| 'dialog'`, `'sheet'` | Set a bottom sheet or centered modal explicitly. |
+| `returnFocusRef` | Optional element ref | Supply the trigger when the browser does not focus it on pointer activation. |
+
+## Interaction and constraints
+
+Tap the handle to cycle through detents. Arrow Up, Arrow Down, Home and End resize a multi-detent sheet. A single-detent dismissible sheet has a dismiss handle. The panel can impose a minimum content height at very small detents. Scrolling remains available within the sheet body. Start drag-to-resize on the handle.
+
+Use `dismissible={false}` only when the content has an explicit way to finish or cancel. Keep the trigger mounted for focus restoration. For layout that switches presentation automatically, use [Adaptive Dialog](adaptive-dialog.md).

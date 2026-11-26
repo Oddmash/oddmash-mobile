@@ -339,8 +339,9 @@ test('the narrow landing keeps the repository icon and zoomed swipe actions usab
   await github.focus();
   await expect(github).toBeFocused();
   const bounds = (await github.boundingBox())!;
-  expect(bounds.width).toBeGreaterThanOrEqual(44);
-  expect(bounds.height).toBeGreaterThanOrEqual(44);
+  // Firefox may round a position delta slightly below the computed 44 CSS pixels.
+  expect(bounds.width).toBeGreaterThanOrEqual(43.99);
+  expect(bounds.height).toBeGreaterThanOrEqual(43.99);
   await page.route(sourceUrl, (route) => route.fulfill({ body: 'Repository destination' }));
   await github.press('Enter');
   await expect(page).toHaveURL(sourceUrl);

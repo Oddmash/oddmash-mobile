@@ -7,6 +7,8 @@
   "accent": "#244b37",
   "accent-hover": "#173526",
   "focus": "#3157bf",
+  "focus-width": "2px",
+  "focus-offset": "2px",
   "stage": "#203332",
   "stage-ink": "#eef3eb",
   "stage-muted": "#c4d4cf",
