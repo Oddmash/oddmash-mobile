@@ -181,3 +181,35 @@ test('pinching a swipe row zooms the page without revealing actions', async ({ b
     await page.close();
   }
 });
+
+test('a stationary second finger on refresh content cancels an armed pull', async ({ browser, browserName, baseURL }) => {
+  test.skip(browserName !== 'chromium', 'Uses Chromium touch input through CDP');
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  try {
+    await page.goto(new URL('/tests/browser/fixtures/controls.html', baseURL).href);
+    await page.addStyleTag({ content: 'html { touch-action: none; }' });
+    const refresh = page.getByRole('region', { name: 'Refresh fixture' });
+    const handle = refresh.locator('.om-refresh-handle');
+    const content = refresh.getByText('Refreshable content');
+    const status = refresh.getByRole('status');
+    await handle.scrollIntoViewIfNeeded();
+    const box = (await handle.boundingBox())!;
+    const body = (await content.boundingBox())!;
+    const x = Math.round(box.x + box.width / 2);
+    const y = Math.round(box.y + box.height / 2);
+    const cdp = await page.context().newCDPSession(page);
+    const start = { id: 1, x, y };
+    const pulled = { ...start, y: y + 85 };
+    const second = { id: 2, x: Math.round(body.x + 24), y: Math.round(body.y + body.height / 2) };
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [start] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [pulled] });
+    await expect(status).toHaveText('Release to refresh');
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [pulled, second] });
+    await expect(status).toHaveText('');
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await expect(status).toHaveText('');
+    await expect(refresh.getByRole('button', { name: 'Refresh', exact: true })).toBeEnabled();
+  } finally {
+    await page.close();
+  }
+});

@@ -6,7 +6,6 @@ import type { Axis } from './gesture.js';
 
 type Session = {
   id: number;
-  touch: boolean;
   x: number;
   y: number;
   lastDistance: number;
@@ -14,6 +13,7 @@ type Session = {
   velocity: number;
   active: boolean;
   target: Element;
+  cleanup?: () => void;
 };
 type Options = { axis: Axis; enabled?: boolean; canStart?: (event: PointerEvent<HTMLElement>) => boolean; onCommit: (distance: number, velocity: number) => void };
 
@@ -36,6 +36,7 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
   const [distance, setDistance] = useState(0);
   const [dragging, setDragging] = useState(false);
   const reset = useCallback(() => {
+    session.current?.cleanup?.();
     session.current = null;
     setDistance(0);
     setDragging(false);
@@ -49,27 +50,34 @@ export const useDrag = ({ axis, enabled = true, canStart, onCommit }: Options) =
     dragged.current = false;
     if (session.current) cancel(session.current);
   }, [enabled, cancel]);
+  useEffect(() => () => session.current?.cleanup?.(), []);
   const delta = (event: PointerEvent<HTMLElement>, current: Session) => axis === 'x' ? event.clientX - current.x : event.clientY - current.y;
   return {
     distance, dragging,
     didDrag: () => dragged.current,
     handlers: {
       onPointerDown: (event: PointerEvent<HTMLElement>) => {
-        if (event.pointerType === 'touch' && !event.isPrimary && session.current?.touch) {
-          dragged.current = true;
-          cancel(session.current);
-          return;
-        }
         if (!enabled || !event.isPrimary || event.button !== 0 || session.current || canStart?.(event) === false) return;
         if (claimedPointerDowns.has(event.nativeEvent)) return;
         claimedPointerDowns.add(event.nativeEvent);
         dragged.current = false;
         const target = event.target instanceof Element ? event.target : event.currentTarget;
         target.setPointerCapture(event.pointerId);
-        session.current = {
-          id: event.pointerId, touch: event.pointerType === 'touch', x: event.clientX, y: event.clientY,
+        const next: Session = {
+          id: event.pointerId, x: event.clientX, y: event.clientY,
           lastDistance: 0, lastMovementAt: event.timeStamp, velocity: 0, active: false, target,
         };
+        session.current = next;
+        if (event.pointerType === 'touch') {
+          const onSecondTouch = (second: globalThis.PointerEvent) => {
+            if (second.pointerType !== 'touch' || second.pointerId === next.id) return;
+            dragged.current = true;
+            cancel(next);
+          };
+          const document = target.ownerDocument;
+          document.addEventListener('pointerdown', onSecondTouch, { capture: true, passive: true });
+          next.cleanup = () => document.removeEventListener('pointerdown', onSecondTouch, true);
+        }
       },
       onPointerMove: (event: PointerEvent<HTMLElement>) => {
         const current = session.current;
