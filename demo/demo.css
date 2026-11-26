@@ -285,6 +285,13 @@ pre {
 .component-example summary { cursor: pointer; padding-block: var(--mobile-space); }
 .component-example > a:not(.om-button) { padding-block: var(--mobile-space); }
 .component-example .om-refresh { width: 100%; }
+.navigation-example .om-bottom-nav { width: 100%; }
+.navigation-example-screen {
+  width: 100%;
+  padding: calc(var(--mobile-space) * 2);
+  background: var(--mobile-code);
+  border-radius: var(--mobile-surface-radius);
+}
 .om-swipe button:not(.om-button), .om-refresh button {
   border: 1px solid var(--mobile-line);
   border-radius: var(--om-semantic-radius-sm);

@@ -48,10 +48,27 @@ export const BottomSheet = ({open, defaultOpen = false, onOpenChange, title, chi
       }
     }
   }, [visible, showHandle]);
+  useEffect(() => {
+    if (!visible || !centered || !viewport) return;
+    const content = contentRef.current;
+    const active = document.activeElement;
+    const dialog = content?.closest('dialog');
+    if (!(active instanceof HTMLElement) || !content?.contains(active) || !dialog?.open) return;
+    const frame = dialog.getBoundingClientRect();
+    const field = active.getBoundingClientRect();
+    if (field.top < frame.top) dialog.scrollTop += field.top - frame.top;
+    else if (field.bottom > frame.bottom) dialog.scrollTop += field.bottom - frame.bottom;
+  }, [viewport, visible, centered]);
   const viewportHeight = height ? `${height}px` : '100dvh';
+  const centeredStyle = viewport ? {
+    position: 'fixed' as const,
+    insetBlockStart: viewport.offsetTop,
+    insetBlockEnd: viewport.bottomInset,
+    maxHeight: viewport.height * 0.85,
+  } : undefined;
   const index = points.indexOf(current);
   return <Overlay open={visible} onDismiss={() => setVisible(false)} dismissible={dismissible} title={title} returnFocusRef={returnFocusRef}
-    className={centered ? 'om-centered' : 'om-sheet'} style={centered ? undefined : {height: size, minHeight: `min(12rem, ${viewportHeight})`, maxHeight: viewportHeight, bottom: viewport?.bottomInset, transition: drag.dragging ? 'none' : undefined}}>
+    className={centered ? 'om-centered' : 'om-sheet'} style={centered ? centeredStyle : {height: size, minHeight: `min(12rem, ${viewportHeight})`, maxHeight: viewportHeight, bottom: viewport?.bottomInset, transition: drag.dragging ? 'none' : undefined}}>
     {showHandle && <div key="handle" className="om-sheet-controls"><button ref={setHandle} type="button" className="om-handle" aria-label={points.length > 1 ? "Resize sheet" : "Dismiss sheet"}
       onClick={(event) => {
         if (event.detail !== 0 && drag.didDrag()) return;

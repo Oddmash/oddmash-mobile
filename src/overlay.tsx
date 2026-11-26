@@ -14,19 +14,47 @@ const outsideDialog = (dialog: HTMLDialogElement, x: number, y: number) => {
   return x < left || x > right || y < top || y > bottom;
 };
 
-export type OverlayProps = { open: boolean; onDismiss: () => void; dismissible?: boolean; title: string; children: ReactNode; className?: string; style?: CSSProperties; returnFocusRef?: RefObject<HTMLElement | null> };
+export type OverlayProps = {
+  open: boolean;
+  onDismiss: () => void;
+  dismissible?: boolean;
+  showCloseButton?: boolean;
+  title: string;
+  description?: string;
+  children: ReactNode;
+  fixedFooter?: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  returnFocusRef?: RefObject<HTMLElement | null>;
+  initialFocusRef?: RefObject<HTMLElement | null>;
+};
 
-export const Overlay = ({open, onDismiss, dismissible = true, title, children, className, style, returnFocusRef}: OverlayProps) => {
+export const Overlay = ({open, onDismiss, dismissible = true, showCloseButton = true, title, description, children, fixedFooter, className, style, returnFocusRef, initialFocusRef}: OverlayProps) => {
   const ref = useRef<HTMLDialogElement>(null);
   const backdropPress = useRef<number | null>(null);
   const titleId = useId();
+  const descriptionId = useId();
+  const body = <>
+    <header className="om-overlay-header"><h2 id={titleId}>{title}</h2>{dismissible && showCloseButton && <button type="button" onClick={onDismiss} aria-label="Close dialog">×</button>}</header>
+    {description && <p id={descriptionId} className="om-overlay-description">{description}</p>}
+    {children}
+  </>;
   const focusTarget = useRef(returnFocusRef);
   useEffect(() => { focusTarget.current = returnFocusRef; }, [returnFocusRef]);
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || !open) return;
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    dialog.showModal();
+    const initialFocus = initialFocusRef?.current;
+    const setAutofocus = initialFocus && !initialFocus.hasAttribute('autofocus');
+    // The browser chooses its initial focus inside showModal, before a subsequent focus call.
+    if (setAutofocus) initialFocus.setAttribute('autofocus', '');
+    try {
+      dialog.showModal();
+    } finally {
+      if (setAutofocus) initialFocus.removeAttribute('autofocus');
+    }
+    initialFocus?.focus({preventScroll: true});
     const unlock = lockScroll();
     return () => {
       if (dialog.open) dialog.close();
@@ -35,8 +63,8 @@ export const Overlay = ({open, onDismiss, dismissible = true, title, children, c
       const target = explicitTrigger?.isConnected ? explicitTrigger : trigger;
       if (target?.isConnected) target.focus({preventScroll: true});
     };
-  }, [open]);
-  return <dialog ref={ref} className={`om-overlay ${className ?? ''}`} style={style} aria-labelledby={titleId}
+  }, [open, initialFocusRef]);
+  return <dialog ref={ref} className={`om-overlay ${className ?? ''}`} style={style} aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined}
     onCancel={(event) => {
       if (event.target !== event.currentTarget) return;
       event.preventDefault();
@@ -80,6 +108,8 @@ export const Overlay = ({open, onDismiss, dismissible = true, title, children, c
       if (dismissible && startedOnBackdrop && event.target === event.currentTarget
         && outsideDialog(event.currentTarget, event.clientX, event.clientY)) onDismiss();
     }}>
-    {open && <div className="om-overlay-inner"><header className="om-overlay-header"><h2 id={titleId}>{title}</h2>{dismissible && <button type="button" onClick={onDismiss} aria-label="Close dialog">×</button>}</header>{children}</div>}
+    {open && <div className="om-overlay-inner">
+      {fixedFooter ? <><div className="om-overlay-scroll-body">{body}</div>{fixedFooter}</> : body}
+    </div>}
   </dialog>;
 };

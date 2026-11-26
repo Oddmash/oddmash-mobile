@@ -1,6 +1,6 @@
 # Alpha candidate usage
 
-The proposed 0.1.0-alpha.0 package exposes four components. API may change during alpha. Install from a locally packed tarball until a registry release is verified.
+The source alpha exposes six components. APIs may change during alpha. Install from a locally packed tarball until a registry release is verified.
 
 ```tsx
 import { BottomSheet } from '@oddmash/mobile-interactions/bottom-sheet';
@@ -17,6 +17,8 @@ Use controlled `open` and `onOpenChange` for an external trigger. Pass its butto
 | AdaptiveDialog | BottomSheet inputs plus breakpoint and presentation |
 | SwipeAction | children, actions, open, onOpenChange, direction, actionWidth, label |
 | PullToRefresh | children, onRefresh, disabled, threshold, label |
+| [ActionSheet](components/action-sheet.md) | title, actions, onSelect, open, onOpenChange, cancelLabel |
+| [BottomNavigation](components/bottom-navigation.md) | label, items, activeId, className |
 
 Use the buttons as non-drag alternatives. Swipe Action never automatically commits a destructive action. Pull to Refresh currently uses an explicit pull handle rather than intercepting native page scrolling. Bottom Sheet dragging is handle-only. Nonmodal sheets, compound API, nested scroll handoff, route integrations and device-specific refinements are deferred.
 

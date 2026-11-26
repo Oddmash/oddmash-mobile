@@ -8,4 +8,4 @@ pnpm exec playwright install chromium firefox webkit
 pnpm test:browser
 ```
 
-Chromium, Firefox, and WebKit run the shared keyboard and pointer scenarios for Bottom Sheet, Adaptive Dialog, Swipe Action, and Pull to Refresh. The touch-specific swipe and pull scenario uses Chromium's emulated touch input, so that scenario is skipped in Firefox and WebKit. Record physical iOS and Android results separately.
+Chromium, Firefox and WebKit run the shared keyboard and pointer scenarios for Bottom Sheet, Adaptive Dialog, Swipe Action, Pull to Refresh, Action Sheet and Bottom Navigation. The touch-specific swipe, pull and pinch scenarios use Chromium's emulated touch input and are skipped in Firefox and WebKit. The software keyboard scenario injects a visual viewport change to verify geometry and input preservation. Record physical iOS and Android results separately.

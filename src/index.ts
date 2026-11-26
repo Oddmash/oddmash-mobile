@@ -7,3 +7,7 @@ export { SwipeAction } from './swipe-action.js';
 export type { SwipeActionProps } from './swipe-action.js';
 export { PullToRefresh } from './pull-to-refresh.js';
 export type { PullToRefreshProps } from './pull-to-refresh.js';
+export { ActionSheet } from './action-sheet.js';
+export type { ActionSheetAction, ActionSheetProps } from './action-sheet.js';
+export { BottomNavigation } from './bottom-navigation.js';
+export type { BottomNavigationItem, BottomNavigationProps } from './bottom-navigation.js';
