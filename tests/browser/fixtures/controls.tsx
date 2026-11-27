@@ -10,6 +10,7 @@ const Controls = () => {
   const [allowClose, setAllowClose] = useState(false);
   const [closeRequests, setCloseRequests] = useState(0);
   const [refreshDisabled, setRefreshDisabled] = useState(false);
+  const [refreshRequests, setRefreshRequests] = useState(0);
   const resolveRefresh = useRef<(() => void) | null>(null);
   return <>
     <button type="button" onClick={() => setOpen(true)}>Open compact sheet</button>
@@ -36,8 +37,13 @@ const Controls = () => {
     <section aria-label="Refresh fixture">
       <button type="button" onClick={() => setRefreshDisabled((value) => !value)}>{refreshDisabled ? 'Resume refresh' : 'Pause refresh'}</button>
       <button type="button" onClick={() => resolveRefresh.current?.()}>Finish request</button>
-      <PullToRefresh disabled={refreshDisabled} onRefresh={() => new Promise((resolve) => { resolveRefresh.current = resolve; })}>
+      <p>Refresh requests: {refreshRequests}</p>
+      <PullToRefresh disabled={refreshDisabled} onRefresh={() => new Promise((resolve) => {
+        setRefreshRequests((count) => count + 1);
+        resolveRefresh.current = resolve;
+      })}>
         <p>Refreshable content</p>
+        <button type="button" aria-disabled="true">Unavailable content action</button>
       </PullToRefresh>
     </section>
   </>;

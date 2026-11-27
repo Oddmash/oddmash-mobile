@@ -26,4 +26,17 @@ On supported hardware, also check pinch starts on gesture surfaces and OS back o
 
 ## Current evidence
 
-The Chromium, Firefox and WebKit browser checks are recorded in [verification](alpha-verification.md). This procedure has no recorded iOS VoiceOver, Android TalkBack, or physical-device pass. Track those checks and npm readiness in [issue #7](https://github.com/Oddmash/oddmash-mobile/issues/7).
+The Chromium, Firefox and WebKit browser checks are recorded in [verification](alpha-verification.md).
+
+The Android WebView smoke test used an emulated Pixel 8, Android 16 API 36 (`BE2A.250530.026.D1`), WebView `133.0.6943.137` and TalkBack `16.0.0.738667889`. It used emulated touch exploration, swipes and double-taps. The TalkBack speech display confirmed the output below. The runtime revision for the refresh retest was `b65c078`.
+
+| Scenario | Observed in Android WebView |
+| --- | --- |
+| Filter sheet | Reached Close dialog, Resize sheet and Search. Opened the software keyboard and applied the filters. Focus returned to Open filters. |
+| Adaptive dialog | Kept the edited input and its focus when the emulator rotated from a narrow sheet to a centered dialog with the keyboard open. |
+| Swipe Action | Opened and activated Archive. In a React 18 consumer of the package, TalkBack read Message archived after the row disappeared. A right swipe moved to Next message. |
+| Refresh | Originally moved accessibility focus to the document while pending. After the fix, focus stayed on Refresh through a successful request and TalkBack displayed Refreshing and Refreshed. |
+| Action sheet | Focus started on Cancel. Activating the unavailable Share report choice left the sheet open with no action result. |
+| Bottom navigation | Activated Projects and TalkBack identified it as the current page. |
+
+Android Chrome, physical Android and iOS devices, iOS VoiceOver, and the remaining variants in the task matrix still need evidence. Track these checks and npm readiness in [issue #7](https://github.com/Oddmash/oddmash-mobile/issues/7).
