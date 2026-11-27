@@ -10,7 +10,7 @@ const result = await build({
     write: false,
     minify: true,
     target: 'es2022',
-    lib: { entry: fileURLToPath(new URL('../src/index.ts', import.meta.url)), formats: ['es'] },
+    lib: { entry: fileURLToPath(new URL('../dist/index.js', import.meta.url)), formats: ['es'] },
     rolldownOptions: { external: [/^react(?:-dom)?(?:\/|$)/] },
   },
 });

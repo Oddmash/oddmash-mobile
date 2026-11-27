@@ -64,7 +64,7 @@ import '@oddmash/mobile-interactions/styles.css';
 
 export function InboxRow() {
   const [archived, setArchived] = useState(false);
-  const confirmation = useRef(null);
+  const confirmation = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (archived) confirmation.current?.focus();

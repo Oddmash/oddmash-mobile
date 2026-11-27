@@ -12,7 +12,7 @@ These checks apply to the documentation preview and the packed alpha candidate f
 
 ## Current package budget
 
-`pnpm build && pnpm verify:budget` measures the complete six-component ESM entry and shipped stylesheet at gzip level 6. It uses the repository's pinned Vite, the existing React and React DOM peer externals, and the ES2022 target. The current result is 5,203 bytes of JavaScript and 1,590 bytes of CSS. CI budgets are 8,192 and 2,048 bytes respectively. They leave headroom for API-compatible changes to the six primitives while keeping the complete compressed entry below 10 KiB. The check excludes React and host app assets.
+`pnpm build && pnpm verify:budget` measures a minified consumer bundle of the complete six-component `dist/index.js` export and the shipped stylesheet at gzip level 6. It uses the repository's pinned Vite, the existing React and React DOM peer externals, and the ES2022 target. The current result is 5,176 bytes of JavaScript and 1,590 bytes of CSS. CI budgets are 8,192 and 2,048 bytes respectively. They leave headroom for API-compatible changes to the six primitives while keeping the complete compressed entry below 10 KiB. The check excludes React and host app assets.
 
 On the local Apple M5, headless Chromium 158.0.8127.18 at 390 × 844 recorded a p95 animation-frame interval of 16.7 ms both at idle (128 intervals) and while dragging the inbox row (237 intervals). No interval exceeded 34 ms in either sample. The drag used mouse input on the built demo. Treat this as a desktop baseline for comparison, with mobile-device latency recorded separately.
 

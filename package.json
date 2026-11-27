@@ -18,7 +18,7 @@
     "./pull-to-refresh": { "types": "./dist/pull-to-refresh.d.ts", "import": "./dist/pull-to-refresh.js" },
     "./action-sheet": { "types": "./dist/action-sheet.d.ts", "import": "./dist/action-sheet.js" },
     "./bottom-navigation": { "types": "./dist/bottom-navigation.d.ts", "import": "./dist/bottom-navigation.js" },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": { "types": "./dist/styles.css.d.ts", "default": "./dist/styles.css" }
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
