@@ -118,6 +118,8 @@ test('refresh keeps the focused control and announces pending work outside the b
   await expect(trigger).toHaveAttribute('aria-disabled', 'true');
   await expect(trigger).not.toHaveAttribute('disabled');
   await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveCSS('opacity', '0.55');
+  await expect(refresh.getByRole('button', { name: 'Unavailable content action' })).toHaveCSS('opacity', '1');
   await trigger.press('Enter');
   await expect(refresh.getByText('Refresh requests: 1')).toBeVisible();
   expect(await status.evaluate((element) => element.closest('[aria-busy="true"]'))).toBeNull();

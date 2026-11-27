@@ -43,6 +43,7 @@ const Controls = () => {
         resolveRefresh.current = resolve;
       })}>
         <p>Refreshable content</p>
+        <button type="button" aria-disabled="true">Unavailable content action</button>
       </PullToRefresh>
     </section>
   </>;
