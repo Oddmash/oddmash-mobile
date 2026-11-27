@@ -31,7 +31,7 @@ export const PullToRefresh = ({children, onRefresh, disabled = false, threshold 
 
   return <section className="om-refresh">
     <div className="om-refresh-handle" {...drag.handlers} aria-hidden="true">Pull down to refresh ↓</div>
-    <button type="button" disabled={disabled || state === 'refreshing'} onClick={() => void refresh()}>{label}</button>
+    <button type="button" disabled={disabled} aria-disabled={state === 'refreshing' || undefined} onClick={() => void refresh()}>{label}</button>
     <div className="om-refresh-status" role="status">{status}</div>
     <div aria-busy={state === 'refreshing'}>{children}</div>
   </section>;

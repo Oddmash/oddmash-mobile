@@ -106,18 +106,27 @@ test('wide adaptive dialog tracks the visible viewport without losing the edited
   await expect(page.getByRole('button', { name: 'Edit profile' })).toBeFocused();
 });
 
-test('refresh announces pending work outside the busy content', async ({ page }) => {
+test('refresh keeps the focused control and announces pending work outside the busy content', async ({ page }) => {
   await page.goto('/tests/browser/fixtures/controls.html');
   const refresh = page.getByRole('region', { name: 'Refresh fixture' });
   const trigger = refresh.getByRole('button', { name: 'Refresh', exact: true });
   const status = refresh.getByRole('status');
-  await trigger.click();
+  await trigger.focus();
+  await trigger.press('Enter');
   await expect(status).toHaveText('Refreshing…');
   await expect(trigger).toBeDisabled();
+  await expect(trigger).toHaveAttribute('aria-disabled', 'true');
+  await expect(trigger).not.toHaveAttribute('disabled');
+  await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveCSS('opacity', '0.55');
+  await expect(refresh.getByRole('button', { name: 'Unavailable content action' })).toHaveCSS('opacity', '1');
+  await trigger.press('Enter');
+  await expect(refresh.getByText('Refresh requests: 1')).toBeVisible();
   expect(await status.evaluate((element) => element.closest('[aria-busy="true"]'))).toBeNull();
-  await refresh.getByRole('button', { name: 'Finish request' }).click();
+  await refresh.getByRole('button', { name: 'Finish request' }).dispatchEvent('click');
   await expect(status).toHaveText('Refreshed');
   await expect(trigger).toBeEnabled();
+  await expect(trigger).toBeFocused();
 });
 
 test('disabling a refreshing gesture clears an armed pull even when reenabled before release', async ({ page }) => {
