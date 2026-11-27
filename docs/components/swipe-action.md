@@ -27,3 +27,7 @@ import '@oddmash/mobile-interactions/styles.css';
 ## Gesture behavior
 
 A swipe reveals actions. The person explicitly activates a button to perform the mutation. Escape closes the actions and returns focus to the disclosure. Browser scrolling and pinch zoom remain available on supported browsers. For a single open row or an inbox with refresh, see [composition recipes](../composition.md#coordinate-an-inbox).
+
+## Focus when removing a row
+
+The app owns focus when an action removes the entire row, including the active button. After the DOM updates, focus a surviving row, an undo button, or a confirmation with `tabIndex={-1}`. For example, keep a ref to the confirmation and call its `focus()` from a React effect that runs when the archive succeeds. Confirm that the next Tab continues in the expected order. For a list of messages, prefer the next row's action button when the user has more rows to process.

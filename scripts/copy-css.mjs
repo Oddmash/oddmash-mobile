@@ -1,2 +1,4 @@
 import { copyFile } from 'node:fs/promises';
-await copyFile(new URL('../src/styles.css', import.meta.url), new URL('../dist/styles.css', import.meta.url));
+await Promise.all(['styles.css', 'styles.css.d.ts'].map((name) =>
+  copyFile(new URL(`../src/${name}`, import.meta.url), new URL(`../dist/${name}`, import.meta.url)),
+));

@@ -16,4 +16,5 @@ Status: proposed, 2026-11-26. No implementation or performance claims yet.
 | [Native interaction parity](native-interaction-parity.md) | Platform and open-source references, implemented behavior and validation gaps |
 | [Roadmap](roadmap.md) | Milestones and dependencies |
 | [Quality and release](quality-and-release.md) | Acceptance gates and evidence |
+| [Device verification](device-verification.md) | Physical devices, emulators and screen-reader test procedure |
 | [Decisions](decisions.md) | Decision log and open questions |

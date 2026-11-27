@@ -8,7 +8,7 @@
 | Browsers | Chromium, Firefox and WebKit desktop/emulation; actual Android Chrome and iOS Safari/PWA |
 | SSR | React 18/19, Next.js App Router import, hydration, no server DOM usage |
 | A11y | Keyboard, 320 CSS px reflow, 200% text size, drag alternatives, focus restoration, contrasts, reduced motion, VoiceOver/TalkBack |
-| Performance | Same fixture comparison, gzip incremental size, frame timing during drag; baseline and budget recorded before release |
+| Performance | Same fixture comparison, gzip package budget from `pnpm verify:budget`, and frame timing during drag |
 | Delivery | lint, types, tests, build, package tarball inspection, clean consumer install, documentation links |
 
 Emulation is not physical-device evidence. Report pass/fail/blocked/not run separately with exact revision, versions and reproducible cases. Do not claim WCAG conformity from automated scans only.
@@ -22,3 +22,5 @@ The reviewed `main` branch can publish the demo and usage documentation after tr
 
 ## Release
 Use develop for integration and main for approved releases. Require normal reviewed PRs and current CI. Set up trusted npm publishing separately; never embed tokens. Document semver, known limitations, changelog, package exports and rollback/deprecation. Generate llms.txt from versioned human documentation and verify URLs. Do not publish until authorization and evidence are complete. Retain prior published versions; prefer corrective release for regressions.
+
+For the first npm alpha, verify the approved `main` commit, [device evidence](device-verification.md), and clean React 18 and 19 consumers of the exact tarball. Inspect the archive files and use `npm publish <verified-tarball> --dry-run --access public --tag alpha` before public publishing. The npm account needs publish access to `@oddmash` and the registry's required account authentication. After publication, verify the exact version and `alpha` tag from npm, then install it in a clean consumer before advertising the registry command in the guide. Configure future trusted publishing using the repository and workflow settings on npm.
