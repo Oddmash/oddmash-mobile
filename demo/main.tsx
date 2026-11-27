@@ -58,15 +58,21 @@ export function ProfileExample() {
   );
 }`;
 
-const swipeExample = `import { useState } from 'react';
+const swipeExample = `import { useEffect, useRef, useState } from 'react';
 import { SwipeAction } from '@oddmash/mobile-interactions/swipe-action';
 import '@oddmash/mobile-interactions/styles.css';
 
 export function InboxRow() {
   const [archived, setArchived] = useState(false);
-  return archived ? <p>Message archived.</p> : (
+  const confirmation = useRef(null);
+
+  useEffect(() => {
+    if (archived) confirmation.current?.focus();
+  }, [archived]);
+
+  return archived ? <p ref={confirmation} tabIndex={-1}>Message archived.</p> : (
     <SwipeAction direction="left"
-      actions={<button onClick={() => setArchived(true)}>Archive</button>}>
+      actions={<button type="button" onClick={() => setArchived(true)}>Archive</button>}>
       Project update
     </SwipeAction>
   );

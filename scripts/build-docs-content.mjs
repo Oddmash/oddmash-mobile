@@ -9,6 +9,7 @@ const entries = [
   ['Alpha usage and limitations', 'alpha.md'],
   ['Alpha verification', 'alpha-verification.md'],
   ['Browser verification', 'browser-verification.md'],
+  ['Device verification', 'device-verification.md'],
   ['Architecture', 'architecture.md'],
   ['Quality and release', 'quality-and-release.md'],
   ['Native interaction parity', 'native-interaction-parity.md'],
