@@ -2,6 +2,8 @@
 
 Follow the [organization agreements](https://github.com/Oddmash/.github/blob/main/AGENTS.md), especially concurrent work claims, contributor protections and normal merge commits. Consult the [Oddmash skills catalog](https://github.com/Oddmash/oddmash-skills) for product, architecture, accessibility and QA guidance.
 
+Follow the [Oddmash review follow-up guidance](https://github.com/Oddmash/.github/blob/main/docs/AI-CODE-REVIEW.md#following-up-on-review-findings) when addressing review findings.
+
 - Integrate through develop; main is reserved for approved releases. Create issue-linked topic branches, claim work only when no overlapping session or contributor owns it, and verify exact-head CI and independent review before merge.
 - Start authorized work in the same turn after preflight. Do not replace implementation with a promise or repeatedly ask for unchanged authorization.
 - Use TypeScript, React 18/19, pnpm 11.25.0, Node 24 and independent ESM module exports. No mandatory router, CSS framework, global reset or telemetry.
