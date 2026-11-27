@@ -21,6 +21,7 @@ const groups = [
   ['Evidence', [
     ['support', 'Support and limitations', 'alpha.md'],
     ['verification', 'Verification', 'alpha-verification.md'],
+    ['device-tests', 'Device verification', 'device-verification.md'],
     ['browser-tests', 'Browser test instructions', 'browser-verification.md'],
     ['native-parity', 'Native behavior', 'native-interaction-parity.md'],
   ]],
